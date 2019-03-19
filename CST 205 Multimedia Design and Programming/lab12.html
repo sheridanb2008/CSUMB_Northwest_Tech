@@ -1,0 +1,390 @@
+<html>
+<body>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #888888">#CST205 Lab 12</span>
+<span style="color: #888888">#Team 1</span>
+<span style="color: #888888">#Brian Sheridan, Craig Calvert, Samuel Pearce, Kevin Bentley</span>
+
+<span style="color: #888888"># The Room class keeps track of the state of each room as well as references to nearby rooms</span>
+<span style="color: #008800; font-weight: bold">class</span> <span style="color: #BB0066; font-weight: bold">Room</span>:
+
+    <span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">__init__</span>(<span style="color: #007020">self</span>,name,description):
+        <span style="color: #888888"># The name of the room that is displayed automatically with each command</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>name <span style="color: #333333">=</span> name
+        <span style="color: #888888"># The description you see when you type look</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>description <span style="color: #333333">=</span> description
+        <span style="color: #888888"># A dictionary where the key is the direction and the value is another Room object</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>exits <span style="color: #333333">=</span> {}
+        <span style="color: #888888"># A list of objects currently in the room. The objects are just strings</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>items <span style="color: #333333">=</span> []
+        <span style="color: #888888"># Actions (strings) that are allowed in this room, such as sit, turn on light, etc.</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>allowedActions <span style="color: #333333">=</span> []
+
+    <span style="color: #888888"># A direction string and a room object it goes to.</span>
+    <span style="color: #888888"># Each direction will also add a shortcut (E.g. North will add a shortcut of N)</span>
+    <span style="color: #888888"># Directions are case insensitive</span>
+    <span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">addRoom</span>(<span style="color: #007020">self</span>, direction, room):
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>exits[direction<span style="color: #333333">.</span>lower()] <span style="color: #333333">=</span> room
+        <span style="color: #888888">#Add shortcut</span>
+        <span style="color: #007020">self</span><span style="color: #333333">.</span>exits[direction[<span style="color: #0000DD; font-weight: bold">0</span>:<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()] <span style="color: #333333">=</span> room
+
+    <span style="color: #888888"># Attempt to move in a direction. If there is a valid room in that direction</span>
+    <span style="color: #888888"># return a Room object. If it isn&#39;t a valid direction, return None, meaning</span>
+    <span style="color: #888888"># The player cannot go that way.</span>
+    <span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">move</span>(<span style="color: #007020">self</span>,direction):
+        direction <span style="color: #333333">=</span> direction<span style="color: #333333">.</span>lower()
+        <span style="color: #008800; font-weight: bold">if</span>(direction <span style="color: #000000; font-weight: bold">in</span> <span style="color: #007020">self</span><span style="color: #333333">.</span>exits<span style="color: #333333">.</span>keys()):
+            <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">self</span><span style="color: #333333">.</span>exits[direction]
+        <span style="color: #008800; font-weight: bold">else</span>:
+            <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">None</span>
+<span style="color: #888888"># Returns the instructions to print at the start or when &#39;help&#39; is typed.</span>
+<span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">getInstructions</span>():
+    <span style="color: #008800; font-weight: bold">return</span> <span style="background-color: #fff0f0">&#39;&#39;&#39;</span>
+<span style="background-color: #fff0f0">              Welcome to Northwestern Technology&#39;s Adventure Game (CST205 Lab 12)</span>
+<span style="background-color: #fff0f0">              In this game you start in the back yard of a mysterious house. Your </span>
+<span style="background-color: #fff0f0">              goal is to find riches and not die in the process.</span>
+<span style="background-color: #fff0f0">              Part of the game is to figure out what commands you can use. Try to</span>
+<span style="background-color: #fff0f0">              figure out what commands work using natural language.Here are some </span>
+<span style="background-color: #fff0f0">              commands to get you started:</span>
+<span style="background-color: #fff0f0">                Look</span>
+<span style="background-color: #fff0f0">                Go North</span>
+<span style="background-color: #fff0f0">                Go South</span>
+<span style="background-color: #fff0f0">                Inventory</span>
+<span style="background-color: #fff0f0">            &#39;&#39;&#39;</span>
+
+<span style="color: #888888"># This is the main game entry point that loops while the game is being played.</span>
+<span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">play</span>():
+    validDirections <span style="color: #333333">=</span> [<span style="background-color: #fff0f0">&quot;north&quot;</span>,<span style="background-color: #fff0f0">&quot;n&quot;</span>,<span style="background-color: #fff0f0">&quot;south&quot;</span>,<span style="background-color: #fff0f0">&quot;s&quot;</span>,<span style="background-color: #fff0f0">&quot;east&quot;</span>,<span style="background-color: #fff0f0">&quot;e&quot;</span>,<span style="background-color: #fff0f0">&quot;west&quot;</span>,<span style="background-color: #fff0f0">&quot;w&quot;</span>,<span style="background-color: #fff0f0">&quot;up&quot;</span>,<span style="background-color: #fff0f0">&quot;u&quot;</span>,<span style="background-color: #fff0f0">&quot;down&quot;</span>,<span style="background-color: #fff0f0">&quot;d&quot;</span>]
+    livingRoom <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Living Room&quot;</span>, <span style="background-color: #fff0f0">&quot;There is an old TV with a cracked screen and a bookshelf with a collection of books. There is one book missing from the collection.&quot;</span>)
+    kitchen <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Kitchen&quot;</span>,<span style="background-color: #fff0f0">&quot;There is a table and chair, refridgerator and a stove here. There is a panel with a door on the wall.&quot;</span>)
+    backYard <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Back Yard&quot;</span>, <span style="background-color: #fff0f0">&quot;There is a fence here with no gate and an old, rusty swingset.&quot;</span>)<span style="color: #888888"># There is an open hatch with a ladder leading down.&quot;)</span>
+    bedroom <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Bedroom&quot;</span>, <span style="background-color: #fff0f0">&quot;There is a bed with a stained mattress.&quot;</span>)
+    entryway <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Entry&quot;</span>, <span style="background-color: #fff0f0">&quot;There is a chandelier and a door that is boarded shut.&quot;</span>)
+    basement <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Basement&quot;</span>,<span style="background-color: #fff0f0">&quot;It is dark here.&quot;</span>)
+    deathRoom <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Death Room&quot;</span>,<span style="background-color: #fff0f0">&quot;You have died.&quot;</span>)
+    garage <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Garage&quot;</span>,<span style="background-color: #fff0f0">&quot;There is an oil stain on the floor.&quot;</span>)
+    attic <span style="color: #333333">=</span> Room(<span style="background-color: #fff0f0">&quot;Attic&quot;</span>, <span style="background-color: #fff0f0">&quot;This is the secret attic!&quot;</span>)
+    attic<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;Down&quot;</span>,garage)
+    attic<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Huge Diamond&quot;</span>)
+    kitchen<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;North&quot;</span>,backYard)
+    kitchen<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;South&quot;</span>,livingRoom)
+    kitchen<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;East&quot;</span>,garage)
+    kitchen<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;sandwich&quot;</span>)
+    kitchen<span style="color: #333333">.</span>allowedActions<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;sit&quot;</span>)
+    kitchen<span style="color: #333333">.</span>allowedActions<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;open&quot;</span>)
+
+    garage<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;West&quot;</span>,kitchen)
+    garage<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Hammer&quot;</span>)
+    <span style="color: #888888">#garage.items.append(&quot;Key&quot;)</span>
+
+    backYard<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;South&quot;</span>,kitchen)
+    backYard<span style="color: #333333">.</span>allowedActions<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;unlock&quot;</span>)
+    backYard<span style="color: #333333">.</span>allowedActions<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;open&quot;</span>)
+
+    livingRoom<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;North&quot;</span>,kitchen)
+    livingRoom<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;South&quot;</span>,entryway)
+    livingRoom<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;West&quot;</span>,bedroom)
+    
+
+    bedroom<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;East&quot;</span>,livingRoom)
+    bedroom<span style="color: #333333">.</span>allowedActions<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;sit&quot;</span>)
+    bedroom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span>)
+    bedroom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Book&quot;</span>)
+
+    entryway<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;North&quot;</span>,livingRoom)
+
+    basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;Up&quot;</span>,backYard)
+    basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;North&quot;</span>,deathRoom)
+    basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;South&quot;</span>,deathRoom)
+    basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;East&quot;</span>,deathRoom)
+    basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;West&quot;</span>,deathRoom)
+    
+    currentRoom <span style="color: #333333">=</span> backYard
+    playerInventory <span style="color: #333333">=</span> []
+    <span style="color: #008800; font-weight: bold">print</span>(getInstructions())
+    <span style="color: #888888"># The panel exposes the switch</span>
+    kitchenPanelOpen <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+    <span style="color: #888888"># The switch turns on the basement light</span>
+    kitchenSwitchOn <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+
+    <span style="color: #888888"># The skeleton key unlocks the hatch in the back yard</span>
+    backYardHatchUnlocked <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+    
+    <span style="color: #888888"># Once unlocked, the hatch can be opened</span>
+    backYardHatchOpen <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+    
+    <span style="color: #888888">#This is a nested function since there are a couple</span>
+    <span style="color: #888888">#ways to break the piggy bank   </span>
+    <span style="color: #008800; font-weight: bold">def</span> <span style="color: #0066BB; font-weight: bold">breakPiggyBank</span>():
+        <span style="color: #888888">#The piggy bank will be destroyed and a key will appear</span>
+        currentRoom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Broken Piggy Bank&quot;</span>)
+        currentRoom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Key&quot;</span>)
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+            playerInventory<span style="color: #333333">.</span>remove(<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span>)
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> bedroom<span style="color: #333333">.</span>items):
+            bedroom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>remove(<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span>)
+        <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You break the Piggy Bank with the hammer. A key falls out of it onto the floor.&quot;</span>)
+
+    <span style="color: #888888"># If the light is off in the basement and the user moves anywhere except</span>
+    <span style="color: #888888"># up, the user is eaten by a grue (game over -- lose)</span>
+    <span style="color: #888888"># If the basement light is on there is a bar of gold. If they take the gold game over/win</span>
+
+    <span style="color: #888888"># Game loop, exits on the following conditions:</span>
+    <span style="color: #888888">#   Game over (lost or won)</span>
+    <span style="color: #888888">#   User typed exit</span>
+    <span style="color: #008800; font-weight: bold">while</span>(<span style="color: #007020">True</span>):
+
+        <span style="color: #008800; font-weight: bold">if</span>(currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Death Room&quot;</span>):
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;As you move in that direction the growls get louder. The last sensation you feel is yourself being eaten by a grue.&#39;</span>)
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;You are dead.&#39;</span>)
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;You have lost the game.&#39;</span>)
+            <span style="color: #008800; font-weight: bold">break</span>
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;Gold Bar&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;Congratulations! You have found the gold bar and won the game!&quot;</span>)
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;Huge Diamond&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You found the bonus item!&quot;</span>)
+            <span style="color: #008800; font-weight: bold">else</span>:
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;Next time, try to find the bonus item!&quot;</span>)
+            <span style="color: #008800; font-weight: bold">break</span>
+        <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;You are in the &#39;</span> <span style="color: #333333">+</span> currentRoom<span style="color: #333333">.</span>name <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;.&quot;</span>)
+        <span style="color: #007020">input</span> <span style="color: #333333">=</span> requestString(<span style="background-color: #fff0f0">&quot;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">What do you do?&quot;</span>)
+        <span style="color: #888888">#input = raw_input(&quot;\nWhat do you do? &quot;)</span>
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">input</span><span style="color: #333333">==</span><span style="color: #007020">None</span>):
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># All of the words will be split by space characters for parsing.        </span>
+        commands <span style="color: #333333">=</span> <span style="color: #007020">input</span><span style="color: #333333">.</span>split(<span style="background-color: #fff0f0">&quot; &quot;</span>)
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">0</span>):
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># Initially we just are concerned with the first command</span>
+        command <span style="color: #333333">=</span> commands[<span style="color: #0000DD; font-weight: bold">0</span>]
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;exit&quot;</span> <span style="color: #000000; font-weight: bold">or</span> command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;quit&quot;</span>):
+            <span style="color: #008800; font-weight: bold">break</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;help&quot;</span>):
+            <span style="color: #008800; font-weight: bold">print</span>(getInstructions())
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># If the room allows it, let the user sit down.</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;sit&quot;</span>):
+          <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;sit&quot;</span> <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>allowedActions):
+              <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You are sitting down.&quot;</span>)
+          <span style="color: #008800; font-weight: bold">else</span>:
+              <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;There is nothing to sit on here!&quot;</span>)
+          <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;eat&quot;</span> <span style="color: #000000; font-weight: bold">and</span> <span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;sandwich&quot;</span> <span style="color: #000000; font-weight: bold">and</span> <span style="background-color: #fff0f0">&quot;sandwich&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You take a bite out of the sandwich and just as you recognize the taste of cyanide, everything goes black.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;You are dead.&#39;</span>)
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&#39;You have lost the game.&#39;</span>)
+                <span style="color: #008800; font-weight: bold">break</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;read&quot;</span> <span style="color: #000000; font-weight: bold">and</span> <span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;book&quot;</span> <span style="color: #000000; font-weight: bold">and</span> <span style="background-color: #fff0f0">&quot;Book&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The book is titled &#39;Climb Your Way to Riches&#39;. All the pages are blank.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">else</span>:
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I can&#39;t read that.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">continue</span>
+
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;break&quot;</span> <span style="color: #000000; font-weight: bold">or</span> command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;smash&quot;</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;Hammer&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory <span style="color: #000000; font-weight: bold">and</span> 
+             ((<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory) <span style="color: #000000; font-weight: bold">or</span> (<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>items)) <span style="color: #000000; font-weight: bold">and</span>
+             (<span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">4</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;piggy&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;bank&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">3</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;with&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">4</span>]<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;hammer&quot;</span>)):
+                 breakPiggyBank()
+                 <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">3</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;piggy&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;bank&quot;</span>):
+              <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You need to use something to break it.&quot;</span>)
+              <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I can&#39;t break that.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;open&quot;</span>):
+          <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">1</span>):
+              <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;What do you want me to open?&quot;</span>)
+              <span style="color: #008800; font-weight: bold">continue</span>
+          <span style="color: #888888">#Allow the piggy bank to be &#39;opened&#39; with the hammer</span>
+          <span style="color: #008800; font-weight: bold">if</span>((<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">5</span>) <span style="color: #000000; font-weight: bold">and</span> (<span style="background-color: #fff0f0">&quot;Hammer&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory) <span style="color: #000000; font-weight: bold">and</span> 
+             ((<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory) <span style="color: #000000; font-weight: bold">or</span> (<span style="background-color: #fff0f0">&quot;Piggy Bank&quot;</span> <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>items)) <span style="color: #000000; font-weight: bold">and</span>
+             (commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;piggy&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;bank&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">3</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;with&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">4</span>]<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;hammer&quot;</span>)):
+                 breakPiggyBank()
+                 <span style="color: #008800; font-weight: bold">continue</span>
+          <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">3</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;piggy&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;bank&quot;</span>):
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You need to use something to open it.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+          <span style="color: #008800; font-weight: bold">if</span>(<span style="background-color: #fff0f0">&quot;open&quot;</span> <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>allowedActions):
+              <span style="color: #008800; font-weight: bold">if</span>(currentRoom<span style="color: #333333">.</span>name <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&#39;Kitchen&#39;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;panel&quot;</span>):
+                <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> kitchenPanelOpen):
+                    kitchenPanelOpen <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You opened the panel. There is a switch behind the panel.&quot;</span>)
+                    <span style="color: #008800; font-weight: bold">continue</span>
+                <span style="color: #008800; font-weight: bold">else</span>:
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The panel is already open!&quot;</span>)
+                    <span style="color: #008800; font-weight: bold">continue</span>
+              <span style="color: #008800; font-weight: bold">elif</span>(currentRoom<span style="color: #333333">.</span>name <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&#39;Back Yard&#39;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;hatch&quot;</span>):
+                  <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> backYardHatchUnlocked):
+                      <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The hatch is locked.&quot;</span>)
+                      <span style="color: #008800; font-weight: bold">continue</span>
+                  <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> backYardHatchOpen):
+                      backYardHatchOpen <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+                      <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The hatch is now open.&quot;</span>)
+                      <span style="color: #008800; font-weight: bold">continue</span>
+                  <span style="color: #008800; font-weight: bold">else</span>:
+                      <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The hatch is already open.&quot;</span>)
+                      <span style="color: #008800; font-weight: bold">continue</span>
+              <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I don&#39;t know how to open that!&quot;</span>)
+              <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">0</span>]<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;turn&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;on&quot;</span>):
+           <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">2</span>):
+               <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;What do you want to turn on?&quot;</span>)
+               <span style="color: #008800; font-weight: bold">continue</span>
+           <span style="color: #008800; font-weight: bold">elif</span>(commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">==</span><span style="background-color: #fff0f0">&#39;switch&#39;</span> <span style="color: #000000; font-weight: bold">and</span>
+           currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Kitchen&quot;</span><span style="color: #000000; font-weight: bold">and</span> 
+           kitchenPanelOpen <span style="color: #000000; font-weight: bold">and</span> kitchenSwitchOn <span style="color: #333333">==</span> <span style="color: #007020">False</span>):
+               kitchenSwitchOn <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+               <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The switch is on.&quot;</span>)
+               basement<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(<span style="background-color: #fff0f0">&quot;Gold Bar&quot;</span>)
+               basement<span style="color: #333333">.</span>description <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;There pungent smell in the air&quot;</span>
+               <span style="color: #888888"># Remove all the other deadly directions.</span>
+               basement<span style="color: #333333">.</span>exits<span style="color: #333333">.</span>clear()
+               <span style="color: #888888">#Add the up direction back in.</span>
+               basement<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;Up&quot;</span>,backYard)
+               <span style="color: #008800; font-weight: bold">continue</span>
+           <span style="color: #008800; font-weight: bold">else</span>:
+               <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I don&#39;t know how to turn that on.&quot;</span>)
+               <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># Print information to the user about the current Room</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;look&quot;</span>):
+            <span style="color: #008800; font-weight: bold">print</span>(currentRoom<span style="color: #333333">.</span>description)
+            <span style="color: #008800; font-weight: bold">if</span>(currentRoom<span style="color: #333333">.</span>name <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;Basement&quot;</span>):
+                <span style="color: #008800; font-weight: bold">if</span>(kitchenSwitchOn):
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;There is a gold bar on the floor.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">else</span>:
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;It is very dark in here. You hear growling nearby.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">elif</span>(currentRoom<span style="color: #333333">.</span>name <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&#39;Back Yard&#39;</span>):
+                <span style="color: #008800; font-weight: bold">if</span>(backYardHatchOpen):
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;There is an open hatch with a ladder leading down.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">else</span>:
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;There is a closed hatch on the side of the house.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">elif</span>(currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Kitchen&quot;</span> <span style="color: #000000; font-weight: bold">and</span> kitchenPanelOpen):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The panel is open.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">elif</span>(currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Kitchen&quot;</span> <span style="color: #000000; font-weight: bold">and</span> kitchenSwitchOn):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The switch is in the on position.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(currentRoom<span style="color: #333333">.</span>items)):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You see the following items in this room:&quot;</span>)
+                <span style="color: #008800; font-weight: bold">for</span> roomItem <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>items:
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\t</span><span style="background-color: #fff0f0">&quot;</span> <span style="color: #333333">+</span> roomItem)
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(currentRoom<span style="color: #333333">.</span>exits)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">0</span>):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You can go in the following directions:&quot;</span>)
+            <span style="color: #008800; font-weight: bold">for</span> direction <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>exits<span style="color: #333333">.</span>keys():
+                <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(direction)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>):
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\t</span><span style="background-color: #fff0f0">&quot;</span> <span style="color: #333333">+</span> direction)
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># Show the user which items they currently have.</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;inventory&quot;</span> <span style="color: #000000; font-weight: bold">or</span> command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;i&quot;</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(playerInventory)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">0</span>):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You do not have any items in your inventory.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You have the following items:&quot;</span>)
+            <span style="color: #008800; font-weight: bold">for</span> item <span style="color: #000000; font-weight: bold">in</span> playerInventory:
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\t</span><span style="background-color: #fff0f0">&quot;</span> <span style="color: #333333">+</span> item)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;drop&quot;</span>):
+            droppedSomething <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>):
+                <span style="color: #008800; font-weight: bold">for</span> item <span style="color: #000000; font-weight: bold">in</span> playerInventory:
+                    <span style="color: #008800; font-weight: bold">if</span>(item<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span>commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()):
+                        playerInventory<span style="color: #333333">.</span>remove(item)
+                        currentRoom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>append(item)
+                        <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You have dropped &quot;</span> <span style="color: #333333">+</span> item)
+                        droppedSomething <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+                        <span style="color: #008800; font-weight: bold">break</span>
+                <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> droppedSomething):
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You don&#39;t have that.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">else</span>:
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You need to tell me what to drop!&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        
+        itemIndex <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;put&quot;</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Living Room&quot;</span> <span style="color: #000000; font-weight: bold">and</span>
+               <span style="color: #007020">len</span>(commands)<span style="color: #333333">==</span><span style="color: #0000DD; font-weight: bold">4</span> <span style="color: #000000; font-weight: bold">and</span> 
+               commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;book&quot;</span> <span style="color: #000000; font-weight: bold">and</span>
+               commands[<span style="color: #0000DD; font-weight: bold">2</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;on&quot;</span> <span style="color: #000000; font-weight: bold">and</span>
+               (commands[<span style="color: #0000DD; font-weight: bold">3</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;bookshelf&quot;</span> <span style="color: #000000; font-weight: bold">or</span> commands[<span style="color: #0000DD; font-weight: bold">3</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;shelf&quot;</span>)):
+               <span style="color: #008800; font-weight: bold">if</span> (<span style="background-color: #fff0f0">&quot;Book&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+                 <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You hear a clunking sound in a nearby room.&quot;</span>)
+                 garage<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;Up&quot;</span>,attic)
+                 playerInventory<span style="color: #333333">.</span>remove(<span style="background-color: #fff0f0">&quot;Book&quot;</span>)
+                 garage<span style="color: #333333">.</span>description <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">A ladder hangs down from an open hatch above.&quot;</span>
+                 livingRoom<span style="color: #333333">.</span>description <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;There is an old TV with a cracked screen and a bookshelf with a collection of books.&quot;</span>
+                 <span style="color: #008800; font-weight: bold">continue</span>
+               <span style="color: #008800; font-weight: bold">else</span>:
+                 <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You don&#39;t have a book&quot;</span>)
+                 <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I can&#39;t put that there!&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888">#Alias take and grab to get        </span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;take&quot;</span>):
+            command <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;get&quot;</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;grab&quot;</span>):
+            command <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;get&quot;</span>
+        <span style="color: #888888">#Support the command &#39;get&#39; and &#39;pick up&#39;. Either works the same</span>
+        <span style="color: #008800; font-weight: bold">if</span>((<span style="color: #007020">len</span>(commands) <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">1</span>) <span style="color: #000000; font-weight: bold">and</span> command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;get&quot;</span>):
+            itemIndex <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>
+        <span style="color: #008800; font-weight: bold">elif</span>((<span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">2</span>) <span style="color: #000000; font-weight: bold">and</span> (commands[<span style="color: #0000DD; font-weight: bold">0</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;pick&quot;</span>) <span style="color: #000000; font-weight: bold">and</span> (commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;up&quot;</span>)):
+            itemIndex <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">2</span>
+        <span style="color: #008800; font-weight: bold">if</span>(itemIndex<span style="color: #333333">!=</span><span style="color: #0000DD; font-weight: bold">0</span>):
+            pickedSomethingUp <span style="color: #333333">=</span> <span style="color: #007020">False</span>
+            <span style="color: #008800; font-weight: bold">for</span> roomItem <span style="color: #000000; font-weight: bold">in</span> currentRoom<span style="color: #333333">.</span>items:
+                <span style="color: #888888">#Handle single or multi-word item name (e.g. flashlight or &#39;baseball bat&#39;)</span>
+                getItem <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;&quot;</span>
+                <span style="color: #008800; font-weight: bold">for</span> i <span style="color: #000000; font-weight: bold">in</span> <span style="color: #007020">range</span>(itemIndex,<span style="color: #007020">len</span>(commands)):
+                    <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #007020">len</span>(getItem)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">0</span>):
+                        getItem <span style="color: #333333">=</span> getItem <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot; &quot;</span> <span style="color: #333333">+</span> commands[i]
+                    <span style="color: #008800; font-weight: bold">else</span>:
+                        getItem <span style="color: #333333">=</span> commands[i]
+                
+                <span style="color: #008800; font-weight: bold">if</span>(getItem<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span>roomItem<span style="color: #333333">.</span>lower()):
+                    <span style="color: #888888"># Remove item from the room and add it to the inventorylook</span>
+                    playerInventory<span style="color: #333333">.</span>append(roomItem)
+                    currentRoom<span style="color: #333333">.</span>items<span style="color: #333333">.</span>remove(roomItem)
+                    pickedSomethingUp <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+                    <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You now have the &quot;</span> <span style="color: #333333">+</span> roomItem <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot; in your inventory.&quot;</span>)
+                    <span style="color: #008800; font-weight: bold">break</span>
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> pickedSomethingUp):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I can&#39;t find that to pick up.&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #008800; font-weight: bold">if</span>(currentRoom<span style="color: #333333">.</span>name<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;Back Yard&quot;</span> <span style="color: #000000; font-weight: bold">and</span> (<span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>) <span style="color: #000000; font-weight: bold">and</span> command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;unlock&quot;</span> <span style="color: #000000; font-weight: bold">and</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;hatch&quot;</span>):
+            <span style="color: #008800; font-weight: bold">if</span>(<span style="color: #000000; font-weight: bold">not</span> <span style="background-color: #fff0f0">&quot;Key&quot;</span> <span style="color: #000000; font-weight: bold">in</span> playerInventory):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You have nothing to unlock it with.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">if</span>(backYardHatchUnlocked):
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;The hatch is already unlocked.&quot;</span>)
+                <span style="color: #008800; font-weight: bold">continue</span>
+            <span style="color: #008800; font-weight: bold">else</span>:
+                backYardHatchUnlocked <span style="color: #333333">=</span> <span style="color: #007020">True</span>
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You unlocked the hatch with the Key.&quot;</span>)
+                backYard<span style="color: #333333">.</span>addRoom(<span style="background-color: #fff0f0">&quot;Down&quot;</span>,basement)
+                <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># The old Zork Easter Egg</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;xyzzy&quot;</span>):
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;A hollow voice says &#39;fool&#39;&quot;</span>)
+            <span style="color: #008800; font-weight: bold">continue</span>
+        <span style="color: #888888"># Shortcut so go north works</span>
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower()<span style="color: #333333">==</span><span style="background-color: #fff0f0">&quot;go&quot;</span> <span style="color: #000000; font-weight: bold">and</span> <span style="color: #007020">len</span>(commands)<span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">1</span>):
+            command <span style="color: #333333">=</span> commands[<span style="color: #0000DD; font-weight: bold">1</span>]
+        <span style="color: #008800; font-weight: bold">if</span>(command<span style="color: #333333">.</span>lower() <span style="color: #000000; font-weight: bold">in</span> validDirections):
+            newRoom <span style="color: #333333">=</span> currentRoom<span style="color: #333333">.</span>move(command)
+            <span style="color: #008800; font-weight: bold">if</span>(newRoom):
+                currentRoom <span style="color: #333333">=</span> newRoom
+            <span style="color: #008800; font-weight: bold">else</span>:
+                <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;You can&#39;t go that way!&quot;</span>)
+        <span style="color: #008800; font-weight: bold">else</span>:
+            <span style="color: #008800; font-weight: bold">print</span>(<span style="background-color: #fff0f0">&quot;I don&#39;t know how to do that. (Try &#39;look&#39;)&quot;</span>)
+
+        
+
+play()
+</pre></div>
+
+
+</body>
+
+</html>
