@@ -1,0 +1,121 @@
+/*
+ * Assignment 3 Deck of Cards
+ * Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Card Class with test
+ */
+
+public class Assign3 
+{
+
+   public static void main(String[] args) 
+   {
+      Card test = new Card();
+      Card test2 = new Card('N', Card.Suit.diamonds);
+      Card test3 = new Card('J', Card.Suit.clubs);
+      //Card test2 = new Card('A', Card.Suit.diamonds);
+      //Card test3 = new Card('N', Card.Suit.hearts);
+      System.out.println(test);
+      System.out.println(test2);
+      System.out.println(test3 + "\n");
+      
+      test.set('N', Card.Suit.diamonds);
+      test2.set('Q', Card.Suit.spades);
+      System.out.println(test);
+      System.out.println(test2);
+      System.out.println(test3);
+      /*
+      //Tests the equals method
+      Card test4 = new Card();
+      System.out.println(Card.equals(test4));
+      */
+   }
+}
+class Card
+{
+   private char value;
+   private Suit suit;
+   boolean errorFlag;
+   public enum Suit
+   {
+      clubs,
+      diamonds,
+      hearts,
+      spades
+   }
+   public Card(char value, Suit suit)
+   {
+      //constructor with all param
+      set(value, suit);
+      getErrorFlag();
+      
+   }
+   public Card()
+   {
+      //constructor with no param
+      value = 'A';
+      suit = Card.Suit.spades;
+   }
+   public String toString()
+   {
+      if(errorFlag == true)
+      {
+         return ("** illegal **");
+      }
+      else
+      {
+         return (value + " of " + suit);         
+      }
+   }
+   public boolean set(char value, Suit suit)
+   {
+      // Uses the private method isValid
+      if(isValid(value, suit) == true)
+      {
+         this.value = value;
+         this.suit = suit;
+         errorFlag = false;
+         return true;
+      }
+      else 
+      {
+         errorFlag = true;
+         return false;
+      }
+   }
+   public Suit getSuit()
+   {
+      return this.suit;
+   }
+   public char getValue()
+   {
+      return this.value;
+   }
+   public boolean getErrorFlag()
+   {
+      return this.errorFlag;
+   }
+   public static boolean equals(Card card)
+   {
+      Card newCard = new Card();
+      if(newCard.value == card.value && newCard.suit == newCard.suit)
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+   private boolean isValid(char value, Suit suit)
+   {
+      if(value == 'A' || value == '2' || value == '3' || value == '4' || value == '5' || value == '6' || value == '7'
+            || value == '8' || value == '9' || value == 'T' || value == 'J' || value == 'Q' || value == 'K')
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }   
+   }   
+}
