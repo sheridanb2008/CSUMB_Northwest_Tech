@@ -1,14 +1,19 @@
 /*
- * Assignment 3 Deck of Cards
- * Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Assignment: Deck of Cards
+ * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Course:     CST338 - Spring B
+ * Date:       03/26/2019
  * Objective: 
  */
+
+import java.util.Scanner;
 
 public class Assign3 
 {
 
    public static void main(String[] args) 
    {
+// ************** Card Testing *********************
 //      Card test = new Card();
 //      Card test2 = new Card('N', Card.Suit.diamonds);
 //      Card test3 = new Card('J', Card.Suit.clubs);
@@ -28,6 +33,54 @@ public class Assign3
 //      Card test4 = new Card();
 //      System.out.println(Card.equals(test4));
 //      */
+//
+// ************** Hand Testing *********************
+// Create 5 explicit card sets
+// Card card0 = new Card();
+// Card card1 = new Card('9', Card.Suit.diamonds);
+// Card card2 = new Card('J', Card.Suit.clubs);
+// Card card3 = new Card('A', Card.Suit.diamonds);
+// Card card4 = new Card('8', Card.Suit.hearts);
+
+// // Create one hand object
+// Hand playersHand = new Hand();
+
+// // Loop to populate playersHand with Card objects
+// int count = 0;
+// int testCardsCount = 0;
+// Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
+
+// while(count < playersHand.MAX_CARDS)
+// {
+//    if (testCardsCount < 4)
+//    {
+//       playersHand.takeCard(testCards[testCardsCount]);
+//    }
+//    else
+//    {
+//       testCardsCount = 0;
+//       playersHand.takeCard(testCards[testCardsCount]);
+//    }
+
+//    count++;
+//    testCardsCount++;
+// }
+
+// System.out.println("Hand full\nAfter deal");
+// System.out.println(playersHand.toString());
+
+// System.out.println("\nTesting inspectCard()");
+// System.out.println(playersHand.inspectCard(4));
+// System.out.println(playersHand.inspectCard(54));
+
+// while (playersHand.getNumCards() > 0)
+// {
+//    System.out.println("Playing " + playersHand.playCard());
+// }
+
+// System.out.println("\nAfter playing all cards.");
+// System.out.println(playersHand.toString());
+//
 // ************** Deck Testing *********************      
 //    Two decks
       Deck test = new Deck(2);
@@ -56,8 +109,23 @@ public class Assign3
       {
          System.out.print(test2.dealCard() + " / ");
       }
+// ************** Deck/Hand Testing ****************
+      Scanner keyboard = new Scanner(System.in);
+
+      // Prompt user to input number of hands to deal.
+      System.out.print("How many hands? (1 - 10, please): ");
+      int numberOfHands = keyboard.nextInt();
+
+      // Check if input is valid. If not prompt user to enter again.
+      while (numberOfHands < 0 || numberOfHands > 10)
+      {
+         System.out.print("The number of hands needs to be between 1 and 10. " +
+         "Please enter again. ");
+         numberOfHands = keyboard.nextInt();
+      }
    }
 }
+
 class Card
 {
    private char value;
@@ -127,7 +195,7 @@ class Card
    public static boolean equals(Card card)
    {
       Card newCard = new Card();
-      if(newCard.value == card.value && newCard.suit == newCard.suit)
+      if(newCard.value == card.value && newCard.suit == card.suit)
       {
          return true;
       }
@@ -150,6 +218,129 @@ class Card
          return false;
       }   
    }   
+}
+
+class Hand
+{
+   public int MAX_CARDS = 50;
+   private int numCards;
+
+   private Card[] myCards;
+
+   // Default hand constructor
+   public Hand()
+   {
+      myCards = new Card[MAX_CARDS];
+   }
+
+   // Resets the players hand
+   public void resetHand()
+   {
+      Arrays.fill(myCards, null );
+      numCards = 0;
+   }
+
+   // object copy constructor for takeCard().
+   private Card copyCard(Card cardOriginal)
+   {
+      // create new instance of Card
+      Card cardCopy = new Card();
+
+      // copy instance values
+      cardCopy.set(cardOriginal.getValue(), cardOriginal.getSuit());
+      return cardCopy;
+   }
+
+   // adds a card to the next available position in the myCards array.
+   public boolean takeCard(Card card)
+   {
+      Card newCard = copyCard(card);
+
+      for(int i = 0; i < myCards.length; i++)
+         if(myCards[i] == null)
+         {
+            myCards[i] = newCard;
+            numCards++;
+            break;
+         }
+
+      return true;
+   }
+
+   // removes the card in the top occupied position of myCards array and
+   // returns it.
+   public Card playCard()
+   {
+      Card cardPlayed = myCards[numCards - 1];
+      myCards[numCards - 1] = null;
+      numCards--;
+      return cardPlayed;
+   }
+
+   // Wraps toString() output into multiple lines.
+   private String textWrap(String text)
+   {
+      String wrappedText = "";
+      int widthCount = 1;
+
+      // Loops through string by character, inserting "\n" every 80 characters.
+      for (int i = 0; i < text.length(); i++)
+      {
+         wrappedText += text.charAt(i);
+         widthCount++;
+         // When width = 79, "\n" is inserted and width count is reset to one.
+         if (widthCount == 79)
+         {
+            wrappedText += "\n";
+            widthCount = 1;
+         }
+      }
+
+      return wrappedText;
+   }
+
+   // Generates a string of the cards currently in the players hand.
+   public String toString()
+   {
+      String cards = "";
+
+      for(int i = 0; i < numCards; i++)
+      {
+         cards += myCards[i] + ", ";
+      }
+
+      // Removes the trailing ", " from the string.
+      cards = cards.replaceAll(", $", "");
+      String hand = String.format("Hand = ( %s )", cards);
+      hand = textWrap(hand);
+      return hand;
+   }
+
+   // Accessor for numCards
+   public int getNumCards()
+   {
+      return numCards;
+   }
+
+   /* Accessor for an individual card. If card position requested is 
+   *  greater than the number of cards a hand currently holds a card 
+   *  with an errorFlage = true is returned.
+   */
+   public Card inspectCard(int k)
+   {
+      Card card = new Card();
+
+      if (k > getNumCards())
+      {
+         card.errorFlag = true;
+      }
+      else
+      {
+         card = myCards[k];
+      }
+
+      return card;
+   }
 }
 
 /* Define Class Deck
