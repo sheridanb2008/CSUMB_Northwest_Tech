@@ -124,6 +124,61 @@ public class Assign3
                + "and 10. " + "Please enter again. ");
          numberOfHands = keyboard.nextInt();
       }
+      Deck test = new Deck(1);
+      Hand player[] = new Hand[numberOfHands];
+      for(int next = 0; next < numberOfHands; next++) 
+      {
+         player[next] = new Hand();
+      }
+      Card holder = new Card();
+
+      while(holder.getErrorFlag() != true)
+      {
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            holder = test.dealCard();
+            if(holder.getErrorFlag() == true) 
+            {
+               break;
+            }
+            else 
+            {
+               player[next].takeCard(holder);
+            }
+         }
+      }
+      for(int next = 0; next < numberOfHands; next++) 
+      {
+         System.out.println(player[next].toString());
+         System.out.println();
+      }
+      for(int next = 0; next < numberOfHands; next++) 
+      {
+         player[next].resetHand();
+      }
+      test.init(1);
+      test.shuffle();
+      Card holder2 = new Card();
+      while(holder2.getErrorFlag() != true)
+      {
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            holder2 = test.dealCard();
+            if(holder2.getErrorFlag() == true) 
+            {
+               break;
+            }
+            else 
+            {
+               player[next].takeCard(holder2);
+            }
+         }
+      }
+      for(int next = 0; next < numberOfHands; next++) 
+      {
+         System.out.println(player[next].toString());
+         System.out.println();
+      }
    }
 }
 
@@ -474,7 +529,7 @@ class Deck
    public Card dealCard()
    {
       // check to see if the top card is valid 
-      if(this.topCard == (52 * numPacks) - 1)
+      if(this.topCard == (52 * numPacks))
       {
          // return invalid card if not valid 
          Card invalid = new Card('N', Card.Suit.diamonds);
