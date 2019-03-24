@@ -6,11 +6,12 @@
  * Objective: 
  */
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Assign3 
 {
-
+   static Scanner keyboard = new Scanner(System.in);
    public static void main(String[] args) 
    {
 // ************** Card Testing *********************
@@ -41,15 +42,15 @@ public class Assign3
 // Card card2 = new Card('J', Card.Suit.clubs);
 // Card card3 = new Card('A', Card.Suit.diamonds);
 // Card card4 = new Card('8', Card.Suit.hearts);
-
-// // Create one hand object
+//
+//// // Create one hand object
 // Hand playersHand = new Hand();
-
+//
 // // Loop to populate playersHand with Card objects
 // int count = 0;
 // int testCardsCount = 0;
 // Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
-
+//
 // while(count < playersHand.MAX_CARDS)
 // {
 //    if (testCardsCount < 4)
@@ -61,164 +62,162 @@ public class Assign3
 //       testCardsCount = 0;
 //       playersHand.takeCard(testCards[testCardsCount]);
 //    }
-
+//
 //    count++;
 //    testCardsCount++;
 // }
-
+//
 // System.out.println("Hand full\nAfter deal");
 // System.out.println(playersHand.toString());
-
+//
 // System.out.println("\nTesting inspectCard()");
 // System.out.println(playersHand.inspectCard(4));
 // System.out.println(playersHand.inspectCard(54));
-
+//
 // while (playersHand.getNumCards() > 0)
 // {
 //    System.out.println("Playing " + playersHand.playCard());
 // }
-
+//
 // System.out.println("\nAfter playing all cards.");
 // System.out.println(playersHand.toString());
 //
 // ************** Deck Testing *********************      
-//    Two decks
-      Deck test = new Deck(2);
-      for(int next = 0; next < (52 * 2) - 1; next++)
-      {
-         System.out.print(test.dealCard() + " / ");
-      }
-      test.init(2);
-      test.shuffle();
-      System.out.println();
-      for(int next = 0; next < (52 * 2) - 1; next++)
-      {
-         System.out.print(test.dealCard() + " / ");
-      }
-      System.out.println();
-//    One Deck  
-      Deck test2 = new Deck(1);
-      for(int next = 0; next < (52) - 1 ; next++)
-      {
-         System.out.print(test2.dealCard() + " / ");
-      }
-      test2.init(2);
-      test2.shuffle();
-      System.out.println();
-      for(int next = 0; next < (52) - 1; next++)
-      {
-         System.out.print(test2.dealCard() + " / ");
-      }
+////    Two decks
+//      Deck test = new Deck(2);
+//      for(int next = 0; next < (52 * 2) - 1; next++)
+//      {
+//         System.out.print(test.dealCard() + " / ");
+//      }
+//      test.init(2);
+//      test.shuffle();
+//      System.out.println();
+//      for(int next = 0; next < (52 * 2) - 1; next++)
+//      {
+//         System.out.print(test.dealCard() + " / ");
+//      }
+//      System.out.println();
+////    One Deck  
+//      Deck test2 = new Deck(1);
+//      for(int next = 0; next < (52) - 1 ; next++)
+//      {
+//         System.out.print(test2.dealCard() + " / ");
+//      }
+//      test2.init(2);
+//      test2.shuffle();
+//      System.out.println();
+//      for(int next = 0; next < (52) - 1; next++)
+//      {
+//         System.out.print(test2.dealCard() + " / ");
+//      }
+   
 // ************** Deck/Hand Testing ****************
-      Scanner keyboard = new Scanner(System.in);
-
+      
       // Prompt user to input number of hands to deal.
       System.out.print("How many hands? (1 - 10, please): ");
       int numberOfHands = keyboard.nextInt();
 
       // Check if input is valid. If not prompt user to enter again.
-      while (numberOfHands < 0 || numberOfHands > 10)
+      while (numberOfHands < 1 || numberOfHands > 10)
       {
-         System.out.print("The number of hands needs to be between 1 and 10. " +
-         "Please enter again. ");
+         System.out.print("The number of hands needs to be between 1 "
+               + "and 10. " + "Please enter again. ");
          numberOfHands = keyboard.nextInt();
       }
    }
 }
 
-class Card
-{
-   private char value;
-   private Suit suit;
-   private boolean errorFlag;
-   public enum Suit
+   class Card
    {
-      clubs,
-      diamonds,
-      hearts,
-      spades;
-
-      public static Object temp;
-   }
-   public Card(char value, Suit suit)
-   {
-      //constructor with all param
-      set(value, suit);
-      getErrorFlag();
-      
-   }
-   public Card()
-   {
-      //constructor with no param
-      value = 'A';
-      suit = Card.Suit.spades;
-   }
-   public String toString()
-   {
-      if(errorFlag == true)
+      private char value;
+      private Suit suit;
+      private boolean errorFlag;
+      public enum Suit
       {
-         return ("** illegal **");
+         clubs,
+         diamonds,
+         hearts,
+         spades;
       }
-      else
+      public Card(char value, Suit suit)
       {
-         return (value + " of " + suit);         
+         //constructor with all param
+         set(value, suit);
+         getErrorFlag();
+         
       }
-   }
-   public boolean set(char value, Suit suit)
-   {
-      // Uses the private method isValid
-      if(isValid(value, suit) == true)
+      public Card()
       {
-         this.value = value;
-         this.suit = suit;
-         errorFlag = false;
-         return true;
+         //constructor with no param
+         value = 'A';
+         suit = Card.Suit.spades;
       }
-      else 
+      public String toString()
       {
-         errorFlag = true;
-         return false;
+         if(errorFlag == true)
+         {
+            return ("** illegal **");
+         }
+         else
+         {
+            return (value + " of " + suit);         
+         }
       }
-   }
-   public Suit getSuit()
-   {
-      return this.suit;
-   }
-   public char getValue()
-   {
-      return this.value;
-   }
-   public boolean getErrorFlag()
-   {
-      return this.errorFlag;
-   }
-   public static boolean equals(Card card)
-   {
-      Card newCard = new Card();
-      if(newCard.value == card.value && newCard.suit == card.suit)
+      public boolean set(char value, Suit suit)
       {
-         return true;
+         // Uses the private method isValid
+         if(isValid(value, suit) == true)
+         {
+            this.value = value;
+            this.suit = suit;
+            errorFlag = false;
+            return true;
+         }
+         else 
+         {
+            errorFlag = true;
+            return false;
+         }
       }
-      else
+      public Suit getSuit()
       {
-         return false;
+         return this.suit;
       }
-   }
-   private boolean isValid(char value, Suit suit)
-   {
-      if(value == 'A' || value == '2' || value == '3' || value == '4'
-            || value == '5' || value == '6' || value == '7'
-            || value == '8' || value == '9' || value == 'T' 
-            || value == 'J' || value == 'Q' || value == 'K')
+      public char getValue()
       {
-         return true;
+         return this.value;
       }
-      else
+      public boolean getErrorFlag()
       {
-         return false;
+         return this.errorFlag;
+      }
+      public boolean equals(Card card)
+      {
+         Card newCard = new Card();
+         if(newCard.value == card.value && newCard.suit == card.suit)
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+      }
+      private boolean isValid(char value, Suit suit)
+      {
+         if(value == 'A' || value == '2' || value == '3' || value == '4' 
+               || value == '5' || value == '6' || value == '7'
+               || value == '8' || value == '9' || value == 'T' 
+               || value == 'J' || value == 'Q' || value == 'K')
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }   
       }   
-   }   
-}
+   }
 
 class Hand
 {
@@ -332,7 +331,7 @@ class Hand
 
       if (k > getNumCards())
       {
-         card.errorFlag = true;
+         card = new Card('N', Card.Suit.diamonds);
       }
       else
       {
