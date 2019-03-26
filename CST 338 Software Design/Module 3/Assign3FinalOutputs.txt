@@ -15,118 +15,118 @@ public class Assign3
 
    public static void main(String[] args) 
    {
-//// ************** Card Testing *********************
-////
-//      // Create cards for testing
-//      System.out.println("-------- Class Card Test --------");
-//      Card test = new Card();
-//      Card test2 = new Card('N', Card.Suit.diamonds);
-//      Card test3 = new Card('J', Card.Suit.clubs);
-//      //Card test2 = new Card('A', Card.Suit.diamonds);
-//      //Card test3 = new Card('N', Card.Suit.hearts);
-//      // Output cards to console
-//      System.out.println(test);
-//      System.out.println(test2);
-//      System.out.println(test3 + "\n");
-//      
-//      // Test set function in card class
-//      test.set('N', Card.Suit.diamonds);
-//      test2.set('Q', Card.Suit.spades);
-//      System.out.println(test);
-//      System.out.println(test2);
-//      System.out.println(test3);
-//      //Tests the equals method
-//      System.out.println("\nTest of the equals method");
-//      Card test4 = new Card();
-//      System.out.println(Card.equals(test4));
-// 
-//
-//// ************** Hand Testing *********************
-//// Create 5 explicit card sets
-////
-//      // Create cards
-//      System.out.println("-------- Class Hand Test --------");
-//      Card card0 = new Card();
-//      Card card1 = new Card('9', Card.Suit.diamonds);
-//      Card card2 = new Card('J', Card.Suit.clubs);
-//      Card card3 = new Card('A', Card.Suit.diamonds);
-//      Card card4 = new Card('8', Card.Suit.hearts);
-//
-//      // Create one hand object
-//      Hand playersHand = new Hand();
-//
-//      // Loop to populate playersHand with Card objects
-//      int count = 0;
-//      int testCardsCount = 0;
-//      Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
-//
-//      while(count < playersHand.MAX_CARDS)
-//      {
-//         if (testCardsCount < 4)
-//      {
-//      playersHand.takeCard(testCards[testCardsCount]);
-//      }
-//      else
-//      {
-//         testCardsCount = 0;
-//         playersHand.takeCard(testCards[testCardsCount]);
-//      }
-//      count++;
-//      testCardsCount++;
-//      }
-//
-//      System.out.println("Hand full\nAfter deal");
-//      System.out.println(playersHand.toString());
-//      System.out.println("\nTesting inspectCard()");
-//      System.out.println(playersHand.inspectCard(4));
-//      System.out.println(playersHand.inspectCard(54));
-//
-//      while (playersHand.getNumCards() > 0)
-//      {
-//         System.out.println("Playing " + playersHand.playCard());
-//      }
-//
-//      System.out.println("\nAfter playing all cards.");
-//      System.out.println(playersHand.toString());
-// 
-//// ************** Deck Testing *********************      
-////    Two decks
-////    
-//      // Test deck class un-shuffled 2 decks
-//      System.out.println("-------- Class Deck Test --------");
-//      Deck deck1 = new Deck(2);
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//      }
-//      // re-initialize deck / shuffle
-//      deck1.init(2);
-//      deck1.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//      }
-//      System.out.println();
-////    One Deck  
-//      // Test deck class un-shuffled 1 decks
-//      Deck deck2 = new Deck(1);
-//      for(int next = 0; next < (52) - 1 ; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
-//      // re-initialize deck / shuffle
-//      deck2.init(2);
-//      deck2.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52) - 1; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
+      //// ************** Card Testing *********************
+      //
+      // Create cards for testing
+/*      System.out.println("-------- Class Card Test --------");
+      Card test = new Card();
+      Card test2 = new Card('N', Card.Suit.diamonds);
+      Card test3 = new Card('J', Card.Suit.clubs);
+      //Card test2 = new Card('A', Card.Suit.diamonds);
+      //Card test3 = new Card('N', Card.Suit.hearts);
+      // Output cards to console
+      System.out.println(test);
+      System.out.println(test2);
+      System.out.println(test3 + "\n");
 
-   //************** Deck/Hand Testing ****************
+      // Test set function in card class
+      test.set('N', Card.Suit.diamonds);
+      test2.set('Q', Card.Suit.spades);
+      System.out.println(test);
+      System.out.println(test2);
+      System.out.println(test3);
+      //Tests the equals method
+      System.out.println("\nTest of the equals method");
+      Card test4 = new Card();
+      System.out.println(Card.equals(test4));
+*/
+
+      // ************** Hand Testing *********************
+      // Create 5 explicit card sets
+      //
+      // Create cards
+/*      System.out.println("-------- Class Hand Test --------");
+      Card card0 = new Card();
+      Card card1 = new Card('9', Card.Suit.diamonds);
+      Card card2 = new Card('J', Card.Suit.clubs);
+      Card card3 = new Card('A', Card.Suit.diamonds);
+      Card card4 = new Card('8', Card.Suit.hearts);
+
+      // Create one hand object
+      Hand playersHand = new Hand();
+
+      // Loop to populate playersHand with Card objects
+      int count = 0;
+      int testCardsCount = 0;
+      Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
+
+      while(count < playersHand.MAX_CARDS)
+      {
+         if (testCardsCount < 4)
+         {
+            playersHand.takeCard(testCards[testCardsCount]);
+         }
+         else
+         {
+            testCardsCount = 0;
+            playersHand.takeCard(testCards[testCardsCount]);
+         }
+         count++;
+         testCardsCount++;
+      }
+
+      System.out.println("Hand full\nAfter deal");
+      System.out.println(playersHand.toString());
+      System.out.println("\nTesting inspectCard()");
+      System.out.println(playersHand.inspectCard(4));
+      System.out.println(playersHand.inspectCard(54));
+
+      while (playersHand.getNumCards() > 0)
+      {
+         System.out.println("Playing " + playersHand.playCard());
+      }
+
+      System.out.println("\nAfter playing all cards.");
+      System.out.println(playersHand.toString());
+*/
+      // ************** Deck Testing *********************      
+      //    Two decks
+      //    
+      // Test deck class un-shuffled 2 decks
+/*      System.out.println("-------- Class Deck Test --------");
+      Deck deck1 = new Deck(2);
+      for(int next = 0; next < (52 * 2) - 1; next++)
+      {
+         System.out.print(deck1.dealCard() + " / ");
+      }
+      // re-initialize deck / shuffle
+      deck1.init(2);
+      deck1.shuffle();
+      System.out.println();
+      // output shuffled deck
+      for(int next = 0; next < (52 * 2) - 1; next++)
+      {
+         System.out.print(deck1.dealCard() + " / ");
+      }
+      System.out.println();
+      //    One Deck  
+      // Test deck class un-shuffled 1 decks
+      Deck deck2 = new Deck(1);
+      for(int next = 0; next < (52) - 1 ; next++)
+      {
+         System.out.print(deck2.dealCard() + " / ");
+      }
+      // re-initialize deck / shuffle
+      deck2.init(2);
+      deck2.shuffle();
+      System.out.println();
+      // output shuffled deck
+      for(int next = 0; next < (52) - 1; next++)
+      {
+         System.out.print(deck2.dealCard() + " / ");
+      }
+*/
+      //************** Deck/Hand Testing ****************
       // Prompt user to input number of hands to deal.
       Scanner keyboard = new Scanner(System.in);
       System.out.print("How many hands? (1 - 10, please): ");
@@ -154,17 +154,17 @@ public class Assign3
       while(holder.getErrorFlag() != true)
       {
          for(int next = 0; next < numberOfHands; next++)
+         {
+            holder = singleDeck1.dealCard();
+            if(holder.getErrorFlag() == true) 
             {
-               holder = singleDeck1.dealCard();
-               if(holder.getErrorFlag() == true) 
-               {
-                  break;
-               }
-               else 
-               {
-                  player[next].takeCard(holder);
-               }
+               break;
             }
+            else 
+            {
+               player[next].takeCard(holder);
+            }
+         }
       }
       // output to screen players hands
       for(int next = 0; next < numberOfHands; next++) 
@@ -186,17 +186,17 @@ public class Assign3
       while(holder2.getErrorFlag() != true)
       {
          for(int next = 0; next < numberOfHands; next++)
+         {
+            holder2 = singleDeck1.dealCard();
+            if(holder2.getErrorFlag() == true) 
             {
-               holder2 = singleDeck1.dealCard();
-               if(holder2.getErrorFlag() == true) 
-               {
-                  break;
-               }
-               else 
-               {
-                  player[next].takeCard(holder2);
-               }
+               break;
             }
+            else 
+            {
+               player[next].takeCard(holder2);
+            }
+         }
       }
       // output players hands
       for(int next = 0; next < numberOfHands; next++) 
@@ -206,7 +206,7 @@ public class Assign3
       }
       // close keyboard
       keyboard.close();
-   // ************ End Deck/Hand Testing **************   
+      // ************ End Deck/Hand Testing **************   
    }
 }
 // ******************** Card Class ********************
@@ -230,7 +230,7 @@ class Card
       //constructor with all param
       set(value, suit);
       this.errorFlag = !isValid(value, suit);
-      
+
    }
    // Default Card constructor
    public Card()
@@ -413,15 +413,15 @@ class Hand
    }
 
    /* Accessor for an individual card. If card position requested is 
-   *  greater than the number of cards a hand currently holds a card 
-   *  with an errorFlage = true is returned.
-   */
+    *  greater than the number of cards a hand currently holds a card 
+    *  with an errorFlage = true is returned.
+    */
    public Card inspectCard(int k)
    {
       Card card = new Card();
       if (k > getNumCards())
       {
-        Card invalid = new Card('N', Card.Suit.diamonds);
+         Card invalid = new Card('N', Card.Suit.diamonds);
          return invalid;
       }
       else
@@ -441,7 +441,7 @@ class Deck
    private Card[] cards;
    private int topCard;
    private int numPacks;
-   
+
    /* Define Constructor Deck(No input values for deck number)
     *   Objective: Initialize the the values in the card class.
     */    
@@ -451,7 +451,7 @@ class Deck
       numPacks = 1;
       init(1);
    }
- 
+
    /* Define Constructor Deck(input values for deck number)
     *   Objective: Initialize the the values in the card class. Test 
     *   for input values in range of MAX_CARDS.
@@ -496,7 +496,7 @@ class Deck
          this.cards[next] = masterPack[next - (52 * (next/52))]; 
       }
    }
-   
+
    /* Define shuffle
     *   Objective: Create two random variables and use them as indexes to 
     *     shuffle the deck of cards.
@@ -541,7 +541,7 @@ class Deck
       this.topCard++;
       return topCard;
    }
-  
+
    /* Define Accessor for topCard
     *   Objective: Return the top card value
     */ 
@@ -549,7 +549,7 @@ class Deck
    {
       return topCard;
    }
-   
+
    /* Define inspectCard
     *   Objective: Check to see if current card is valid and return the card
     *     If invalid return card with errorFlag set to true (error flag 
