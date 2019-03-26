@@ -115,78 +115,78 @@ public class Assign3
       }
 */
    /************** Deck/Hand Testing ****************/
-	      // Prompt user to input number of hands to deal.
-	   
-	   	  Scanner keyboard = new Scanner(System.in);
-	      System.out.print("How many hands? (1 - 10, please): ");
-	      int numberOfHands = keyboard.nextInt();
+         // Prompt user to input number of hands to deal.
+      
+           Scanner keyboard = new Scanner(System.in);
+         System.out.print("How many hands? (1 - 10, please): ");
+         int numberOfHands = keyboard.nextInt();
 
-	      // Check if input is valid. If not prompt user to enter again.
-	      while (numberOfHands < 1 || numberOfHands > 10)
-	      {
-	         System.out.print("The number of hands needs to be between 1 "
-	               + "and 10. " + "Please enter again. ");
-	         numberOfHands = keyboard.nextInt();
-	      }
-	      System.out.println("UNSHUFFLED");
-	      Deck test = new Deck(1);
-	      Hand player[] = new Hand[numberOfHands];
-	      for(int next = 0; next < numberOfHands; next++) 
-	      {
-	         player[next] = new Hand();
-	      }
-	      Card holder = new Card();
+         // Check if input is valid. If not prompt user to enter again.
+         while (numberOfHands < 1 || numberOfHands > 10)
+         {
+            System.out.print("The number of hands needs to be between 1 "
+                  + "and 10. " + "Please enter again. ");
+            numberOfHands = keyboard.nextInt();
+         }
+         System.out.println("UNSHUFFLED");
+         Deck test = new Deck(1);
+         Hand player[] = new Hand[numberOfHands];
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            player[next] = new Hand();
+         }
+         Card holder = new Card();
 
-	      while(holder.getErrorFlag() != true)
-	      {
-	         for(int next = 0; next < numberOfHands; next++) 
-	         {
-	            holder = test.dealCard();
-	            if(holder.getErrorFlag() == true) 
-	            {
-	               break;
-	            }
-	            else 
-	            {
-	               player[next].takeCard(holder);
-	            }
-	         }
-	      }
-	      for(int next = 0; next < numberOfHands; next++) 
-	      {
-	         System.out.println(player[next].toString());
-	         System.out.println();
-	      }
-	      for(int next = 0; next < numberOfHands; next++) 
-	      {
-	         player[next].resetHand();
-	      }
-	      System.out.println("SHUFFLED");
-	      test.init(1);
-	      test.shuffle();
-	      Card holder2 = new Card();
-	      while(holder2.getErrorFlag() != true)
-	      {
-	         for(int next = 0; next < numberOfHands; next++) 
-	         {
-	            holder2 = test.dealCard();
-	            if(holder2.getErrorFlag() == true) 
-	            {
-	               break;
-	            }
-	            else 
-	            {
-	               player[next].takeCard(holder2);
-	            }
-	         }
-	      }
-	      for(int next = 0; next < numberOfHands; next++) 
-	      {
-	         System.out.println(player[next].toString());
-	         System.out.println();
-	      }
-	   }
-	}
+         while(holder.getErrorFlag() != true)
+         {
+            for(int next = 0; next < numberOfHands; next++) 
+            {
+               holder = test.dealCard();
+               if(holder.getErrorFlag() == true) 
+               {
+                  break;
+               }
+               else 
+               {
+                  player[next].takeCard(holder);
+               }
+            }
+         }
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            System.out.println(player[next].toString());
+            System.out.println();
+         }
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            player[next].resetHand();
+         }
+         System.out.println("SHUFFLED");
+         test.init(1);
+         test.shuffle();
+         Card holder2 = new Card();
+         while(holder2.getErrorFlag() != true)
+         {
+            for(int next = 0; next < numberOfHands; next++) 
+            {
+               holder2 = test.dealCard();
+               if(holder2.getErrorFlag() == true) 
+               {
+                  break;
+               }
+               else 
+               {
+                  player[next].takeCard(holder2);
+               }
+            }
+         }
+         for(int next = 0; next < numberOfHands; next++) 
+         {
+            System.out.println(player[next].toString());
+            System.out.println();
+         }
+      }
+   }
 
 class Card
 {
@@ -392,7 +392,7 @@ class Hand
       Card card = new Card();
       if (k > getNumCards())
       {
-    	 Card invalid = new Card('N', Card.Suit.diamonds);
+        Card invalid = new Card('N', Card.Suit.diamonds);
          return invalid;
       }
       else
