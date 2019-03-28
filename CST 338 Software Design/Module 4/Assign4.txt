@@ -1,0 +1,82 @@
+import java.io.*;
+
+interface BarcodeIO
+{
+   public boolean scan(BarcodeImage bc);
+   /*
+    * 
+    */
+   public boolean readText(String text);
+   /*
+    * 
+    */
+   public boolean generateImageFromText();
+   /*
+    * 
+    */
+   public boolean translateImageToText();
+   /*
+    * 
+    */
+   public void displayTextToConsole();
+   /*
+    * 
+    */
+   public void displayImageToConsole();
+   /*
+    * 
+    */
+}
+class BarcodeImage implements Cloneable
+{
+   public static final int MAX_HEIGHT = 30;
+   public static final int MAX_WIDTH = 65;
+   private boolean[][] imageData;
+   /*
+    * Constructors (Two minimum)
+    * 	Default Constructor -- instantiates a 2D array MAX_HEIGHT X MAX_WIDTH fills the array with all blanks(false)
+    * 	BarcodeImage(String[] strData) - takes a 1D array of Strings converts it to the internal 2D array of booleans
+    * 	HINT - Tricky because the incoming image is not the same size as the internal matrix. ***You have to pack it into the
+    * 	lower-left corner of the double array, causing a bit of stress if you don't like 2D counting.
+    * Accessor and Mutator for each bit in the image: boolean getPixel(int row, int col) boolean setPixel(int row,int col, boolean value)
+    * 	getPixel can use the return value for both the actual data, and also the error condition, just returns false
+    * OPTIONAL- A private utility method is highly recommended, but not required: checkSize(String[] data)
+    * OPTIONAL- A displayToConsole() method that is useful for debugging this class. 
+    * A clone() method that overrides the method of that name in Cloneable interface.  
+    */
+   
+}
+class DataMatrix implements BarcodeIO
+{
+   public static final char BLACK_CHAR = '*';
+   public static final char WHITE_CHAR = ' ';
+   private BarcodeImage image;
+   private String text;
+   private int actualWidth;
+   private int actualHeight;
+   
+   /*
+    * Constructors (Three minimum)
+    * 	Default Constructor = constructs an empty, but non-null, image and text value. The internal image should be all white
+    *   actualWidth and actualHeight should start at 0. The text can be set to blank, "", or something undefined.
+    *   DataMatrix(BarcodeImage image) - sets the image, but leaves the text at its default value. Call scan() and avoid duplication of code.
+    *   DataMatrix(String text) - sets the text but leaves the image at its default value. Call readText() and avoid duplication of code. 
+    * readText(String text) - a mutator for text. Like the constructor; in fact it is called by the constructor. 
+    * scan(BarcodeImage image) - a mutator for image. Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things 
+    * 	including calling cleanImage() and then set the actualWidth and actualHeight. scan() calls clone() should deal with CloneNotSupportedException by
+    * 	embedding the clone() call within a try/catch block. 
+    * Accessor for actualWidth and actualHeight but no mutators
+    * private int computeSignalWidth()
+    * private int computeSignalHeight()
+    * Implementation of all BarcodeIO methods.
+    * private void cleanImage() - private method will make no assumption about the placement of the "signal" within a passed-in BarcodeImage. 
+    * 	the cleanImage() method would be called from within scan() and would move the signal to the lower-left of the larger 2D array. 
+    * 	private void shiftImageToLowerLeft()
+    * 	private void shiftImageDown(int offset)
+    * 	private void shiftImageLeft(int offset)
+    * displayImageToConsole()	
+    * OPTIONAL - public void displayRawImage() - useful debugging tool
+    * OPTIONAL - private void clearImage() - nice utility that sets the image to white = false
+    */
+   
+}
