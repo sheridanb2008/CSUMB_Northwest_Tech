@@ -256,12 +256,12 @@ class DataMatrix implements BarcodeIO
       return false;
    }
    
-   public void displayRawImage()
+   public void displayRawImage() // optional
    {
       
    }
    
-   private void clearImage()
+   private void clearImage() //
    {
       
    }
