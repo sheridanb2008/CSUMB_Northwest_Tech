@@ -261,7 +261,7 @@ class DataMatrix implements BarcodeIO
       
    }
    
-   private void clearImage() //
+   private void clearImage() // optional
    {
       
    }
