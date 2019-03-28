@@ -1,5 +1,85 @@
+/*
+ * Assignment: Optical Barcode Readers and Writers
+ * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Course:     CST338 - Spring B
+ * Date:       03/??/2019
+ * Objective: 
+ */
+
 import java.io.*;
 
+public class Assign4
+{
+   public static void main(String[] args)
+   {
+      String[] sImageIn =
+      {
+         "                                               ",
+         "                                               ",
+         "                                               ",
+         "     * * * * * * * * * * * * * * * * * * * * * ",
+         "     *                                       * ",
+         "     ****** **** ****** ******* ** *** *****   ",
+         "     *     *    ****************************** ",
+         "     * **    * *        **  *    * * *   *     ",
+         "     *   *    *  *****    *   * *   *  **  *** ",
+         "     *  **     * *** **   **  *    **  ***  *  ",
+         "     ***  * **   **  *   ****    *  *  ** * ** ",
+         "     *****  ***  *  * *   ** ** **  *   * *    ",
+         "     ***************************************** ",  
+         "                                               ",
+         "                                               ",
+         "                                               "
+
+      };      
+            
+         
+      
+      String[] sImageIn_2 =
+      {
+            "                                          ",
+            "                                          ",
+            "* * * * * * * * * * * * * * * * * * *     ",
+            "*                                    *    ",
+            "**** *** **   ***** ****   *********      ",
+            "* ************ ************ **********    ",
+            "** *      *    *  * * *         * *       ",
+            "***   *  *           * **    *      **    ",
+            "* ** * *  *   * * * **  *   ***   ***     ",
+            "* *           **    *****  *   **   **    ",
+            "****  *  * *  * **  ** *   ** *  * *      ",
+            "**************************************    ",
+            "                                          ",
+            "                                          ",
+            "                                          ",
+            "                                          "
+
+      };
+     
+      BarcodeImage bc = new BarcodeImage(sImageIn);
+      DataMatrix dm = new DataMatrix(bc);
+     
+      // First secret message
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // second secret message
+      bc = new BarcodeImage(sImageIn_2);
+      dm.scan(bc);
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // create your own message
+      dm.readText("What a great resume builder this is!");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+   }
+}
+
+// -------------------- Interface BarcodeIO --------------------
 interface BarcodeIO
 {
    public boolean scan(BarcodeImage bc);
@@ -27,25 +107,51 @@ interface BarcodeIO
     * 
     */
 }
+
+// -------------------- Class BarcodeImage --------------------
 class BarcodeImage implements Cloneable
 {
    public static final int MAX_HEIGHT = 30;
    public static final int MAX_WIDTH = 65;
    private boolean[][] imageData;
-   /*
-    * Constructors (Two minimum)
-    * 	Default Constructor -- instantiates a 2D array MAX_HEIGHT X MAX_WIDTH fills the array with all blanks(false)
-    * 	BarcodeImage(String[] strData) - takes a 1D array of Strings converts it to the internal 2D array of booleans
-    * 	HINT - Tricky because the incoming image is not the same size as the internal matrix. ***You have to pack it into the
-    * 	lower-left corner of the double array, causing a bit of stress if you don't like 2D counting.
-    * Accessor and Mutator for each bit in the image: boolean getPixel(int row, int col) boolean setPixel(int row,int col, boolean value)
-    * 	getPixel can use the return value for both the actual data, and also the error condition, just returns false
-    * OPTIONAL- A private utility method is highly recommended, but not required: checkSize(String[] data)
-    * OPTIONAL- A displayToConsole() method that is useful for debugging this class. 
-    * A clone() method that overrides the method of that name in Cloneable interface.  
-    */
    
+   public BarcodeImage()
+   {
+      
+   }
+   
+   public BarcodeImage(String[] strData)
+   {
+      
+   }
+   
+   public boolean getPixel(int row, int col)
+   {
+      return false;
+   }
+   
+   public boolean setPixel(int row,int col, boolean value)
+   {
+      return false;
+   }
+   
+   private int checkSize(String[] data) // optional
+   {
+      return 0;
+   }
+   
+   public void displayToConsole()  // optional
+   {
+      
+   }
+   
+   public BarcodeImage clone()
+   {
+      return null;
+   }
 }
+
+// -------------------- Class DataMatrix --------------------
 class DataMatrix implements BarcodeIO
 {
    public static final char BLACK_CHAR = '*';
@@ -55,28 +161,108 @@ class DataMatrix implements BarcodeIO
    private int actualWidth;
    private int actualHeight;
    
-   /*
-    * Constructors (Three minimum)
-    * 	Default Constructor = constructs an empty, but non-null, image and text value. The internal image should be all white
-    *   actualWidth and actualHeight should start at 0. The text can be set to blank, "", or something undefined.
-    *   DataMatrix(BarcodeImage image) - sets the image, but leaves the text at its default value. Call scan() and avoid duplication of code.
-    *   DataMatrix(String text) - sets the text but leaves the image at its default value. Call readText() and avoid duplication of code. 
-    * readText(String text) - a mutator for text. Like the constructor; in fact it is called by the constructor. 
-    * scan(BarcodeImage image) - a mutator for image. Besides calling the clone() method of the BarcodeImage class, this method will do a couple of things 
-    * 	including calling cleanImage() and then set the actualWidth and actualHeight. scan() calls clone() should deal with CloneNotSupportedException by
-    * 	embedding the clone() call within a try/catch block. 
-    * Accessor for actualWidth and actualHeight but no mutators
-    * private int computeSignalWidth()
-    * private int computeSignalHeight()
-    * Implementation of all BarcodeIO methods.
-    * private void cleanImage() - private method will make no assumption about the placement of the "signal" within a passed-in BarcodeImage. 
-    * 	the cleanImage() method would be called from within scan() and would move the signal to the lower-left of the larger 2D array. 
-    * 	private void shiftImageToLowerLeft()
-    * 	private void shiftImageDown(int offset)
-    * 	private void shiftImageLeft(int offset)
-    * displayImageToConsole()	
-    * OPTIONAL - public void displayRawImage() - useful debugging tool
-    * OPTIONAL - private void clearImage() - nice utility that sets the image to white = false
-    */
+   public DataMatrix()
+   {
+      
+   }
    
+   public DataMatrix(BarcodeImage image)
+   {
+      
+   }
+   
+   public DataMatrix(String text)
+   {
+      
+   }
+   
+   public boolean readText(String text)
+   {
+      return false;
+   }
+   
+   public boolean scan(BarcodeImage image)
+   {
+      return false;
+   }
+   
+   public int actualWidth()
+   {
+      return actualWidth;
+   }
+   
+   public int actualHeight()
+   {
+      return actualHeight;
+   }
+   
+   private int computeSignalWidth()
+   {
+      return 0;
+   }
+   
+   private int computeSignalHeight()
+   {
+      return 0;
+   }
+   
+   public boolean generateImageFromText()
+   {
+      return false;
+   }
+   
+   public boolean translateImageToText()
+   {
+      return false;
+   }
+   
+   public void displayTextToConsole()
+   {
+      
+   }
+   
+   public void displayImageToConsole()
+   {
+      
+   }
+   
+   private void cleanImage()
+   {
+      
+   }
+   
+   private void moveImageToLowerLeft()
+   {
+      
+   }
+   
+   private void shiftImageDown(int offset)
+   {
+      
+   }
+   
+   private void shiftImageLeft(int offset)
+   {
+      
+   }
+   
+   private char readCharFromCol(int col)
+   {
+      return'a';
+   }
+   
+   private boolean WriteCharToCol(int col, int code)
+   {
+      return false;
+   }
+   
+   public void displayRawImage()
+   {
+      
+   }
+   
+   private void clearImage()
+   {
+      
+   }
 }
