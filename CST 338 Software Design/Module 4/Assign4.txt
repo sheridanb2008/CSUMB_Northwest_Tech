@@ -3,7 +3,7 @@
  * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
  * Course:     CST338 - Spring B
  * Date:       03/??/2019
- * Objective: 
+ * Objective:
  */
 
 import java.io.*;
@@ -13,67 +13,65 @@ public class Assign4
    public static void main(String[] args)
    {
       String[] sImageIn =
-      {
-         "                                               ",
-         "                                               ",
-         "                                               ",
-         "     * * * * * * * * * * * * * * * * * * * * * ",
-         "     *                                       * ",
-         "     ****** **** ****** ******* ** *** *****   ",
-         "     *     *    ****************************** ",
-         "     * **    * *        **  *    * * *   *     ",
-         "     *   *    *  *****    *   * *   *  **  *** ",
-         "     *  **     * *** **   **  *    **  ***  *  ",
-         "     ***  * **   **  *   ****    *  *  ** * ** ",
-         "     *****  ***  *  * *   ** ** **  *   * *    ",
-         "     ***************************************** ",  
-         "                                               ",
-         "                                               ",
-         "                                               "
+         {
+               "                                               ",
+               "                                               ",
+               "                                               ",
+               "     * * * * * * * * * * * * * * * * * * * * * ",
+               "     *                                       * ",
+               "     ****** **** ****** ******* ** *** *****   ",
+               "     *     *    ****************************** ",
+               "     * **    * *        **  *    * * *   *     ",
+               "     *   *    *  *****    *   * *   *  **  *** ",
+               "     *  **     * *** **   **  *    **  ***  *  ",
+               "     ***  * **   **  *   ****    *  *  ** * ** ",
+               "     *****  ***  *  * *   ** ** **  *   * *    ",
+               "     ***************************************** ",
+               "                                               ",
+               "                                               ",
+               "                                               "
 
-      };      
-            
-         
-      
+         };
+
       String[] sImageIn_2 =
-      {
-            "                                          ",
-            "                                          ",
-            "* * * * * * * * * * * * * * * * * * *     ",
-            "*                                    *    ",
-            "**** *** **   ***** ****   *********      ",
-            "* ************ ************ **********    ",
-            "** *      *    *  * * *         * *       ",
-            "***   *  *           * **    *      **    ",
-            "* ** * *  *   * * * **  *   ***   ***     ",
-            "* *           **    *****  *   **   **    ",
-            "****  *  * *  * **  ** *   ** *  * *      ",
-            "**************************************    ",
-            "                                          ",
-            "                                          ",
-            "                                          ",
-            "                                          "
+         {
+               "                                          ",
+               "                                          ",
+               "* * * * * * * * * * * * * * * * * * *     ",
+               "*                                    *    ",
+               "**** *** **   ***** ****   *********      ",
+               "* ************ ************ **********    ",
+               "** *      *    *  * * *         * *       ",
+               "***   *  *           * **    *      **    ",
+               "* ** * *  *   * * * **  *   ***   ***     ",
+               "* *           **    *****  *   **   **    ",
+               "****  *  * *  * **  ** *   ** *  * *      ",
+               "**************************************    ",
+               "                                          ",
+               "                                          ",
+               "                                          ",
+               "                                          "
 
-      };
-     
+         };
+
       BarcodeImage bc = new BarcodeImage(sImageIn);
       DataMatrix dm = new DataMatrix(bc);
-     
+
       // First secret message
       dm.translateImageToText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
-      
+
       // second secret message
       bc = new BarcodeImage(sImageIn_2);
       dm.scan(bc);
       dm.translateImageToText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
-      
+
       // create your own message
       dm.readText("What a great resume builder this is!");
-      dm.generateImageFromText();
+      //dm.generateImageFromText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
    }
@@ -84,27 +82,27 @@ interface BarcodeIO
 {
    public boolean scan(BarcodeImage bc);
    /*
-    * 
+    *
     */
    public boolean readText(String text);
    /*
-    * 
+    *
     */
    public boolean generateImageFromText();
    /*
-    * 
+    *
     */
    public boolean translateImageToText();
    /*
-    * 
+    *
     */
    public void displayTextToConsole();
    /*
-    * 
+    *
     */
    public void displayImageToConsole();
    /*
-    * 
+    *
     */
 }
 
@@ -114,40 +112,95 @@ class BarcodeImage implements Cloneable
    public static final int MAX_HEIGHT = 30;
    public static final int MAX_WIDTH = 65;
    private boolean[][] imageData;
-   
+
+   // Default constructor for BarcodeImage.
    public BarcodeImage()
    {
-      
+      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
+
+      // Sets all default values to false.
+      for (int row = 0; row < imageData.length; row++)
+      {
+         for (int column = 0; column < imageData[row].length; column++)
+         {
+            imageData[row][column] = false;
+         }
+      }
    }
-   
+
+   // takes a 1D array of Strings and converts it to the internal 2D array of booleans.
    public BarcodeImage(String[] strData)
    {
-      
+      imageData = new boolean[MAX_HEIGHT][MAX_WIDTH];
+      String stringCopy = "";
+
+      for(int row = 0; row < strData.length; row++)
+      {
+         stringCopy = strData[row];
+         for(int column = 0; column < stringCopy.length(); column++)
+         {              
+            if (stringCopy.charAt(column) == 42)
+            {
+               setPixel(row, column, true); 
+            }
+            else
+            {
+               setPixel(row, column, false); 
+            }
+         }
+      }
    }
-   
+
    public boolean getPixel(int row, int col)
    {
-      return false;
+      return imageData[row][col];
    }
-   
+
    public boolean setPixel(int row,int col, boolean value)
    {
-      return false;
+      if(row < MAX_HEIGHT && col < MAX_WIDTH)
+      {
+         imageData[row][col] = value;
+         return true;
+      }
+      return false;   
    }
-   
+
    private int checkSize(String[] data) // optional
    {
       return 0;
    }
-   
+
    public void displayToConsole()  // optional
    {
-      
+      for(int r = 0; r < MAX_HEIGHT; r++)
+      {
+         for(int c = 0; c < MAX_WIDTH; c++)
+         {
+            if(imageData[r][c] == true)
+            {
+               System.out.print("*");
+            }
+            else
+            {
+               System.out.print(".");
+            }    
+         }
+         System.out.println();
+      }    
+
    }
-   
+
    public BarcodeImage clone()
    {
-      return null;
+      try
+      {
+         return (BarcodeImage) super.clone();
+      }
+      catch (CloneNotSupportedException e)
+      {
+         return null;
+      }
    }
 }
 
@@ -160,109 +213,232 @@ class DataMatrix implements BarcodeIO
    private String text;
    private int actualWidth;
    private int actualHeight;
-   
+
    public DataMatrix()
    {
-      
+
    }
-   
+
    public DataMatrix(BarcodeImage image)
    {
-      
+      scan(image);
+
    }
-   
+
    public DataMatrix(String text)
    {
       
+       readText(text);
+      
+       
    }
-   
+
    public boolean readText(String text)
    {
-      return false;
+      clearImage();
+      this.text = text;
+      if(this.text != text)
+      {
+          return false;
+      }
+      return true;
    }
-   
+
    public boolean scan(BarcodeImage image)
    {
+
+
+      this.image = image.clone();
+      cleanImage();
+
+      actualWidth = computeSignalWidth();
+      actualHeight = computeSignalHeight();
+
       return false;
    }
-   
+
    public int actualWidth()
    {
       return actualWidth;
    }
-   
+
    public int actualHeight()
    {
       return actualHeight;
    }
-   
+
    private int computeSignalWidth()
    {
-      return 0;
+      int widthTrueCount = 0; 
+      for(int column = 0; column < image.MAX_WIDTH; column++)
+      {
+         if(image.getPixel(image.MAX_HEIGHT - 1,column) == true)
+         {
+            widthTrueCount++;
+         }
+      }
+      return widthTrueCount;
    }
-   
+
    private int computeSignalHeight()
    {
-      return 0;
+      int heightTrueCount = 0; 
+      for(int row = 0; row < image.MAX_HEIGHT; row++)
+      {
+         if(image.getPixel(row,0) == true)
+         {
+            heightTrueCount++;
+         }
+      }
+      return heightTrueCount;  
    }
-   
+
    public boolean generateImageFromText()
    {
       return false;
    }
-   
+
    public boolean translateImageToText()
    {
-      return false;
+      int counting[] = new int[actualHeight];
+      text = "";
+      for(int column = 0; column < actualWidth; column++)
+      {
+         for(int row = (image.MAX_HEIGHT - 2), countIndex = 0; row > ((image.MAX_HEIGHT - 2) - actualHeight); row--, countIndex++)
+         {
+            if(image.getPixel(row,column) == true)
+            {    
+               counting[countIndex] =  2;
+            }
+            else
+            {
+               counting[countIndex] =  0;
+            }
+         }
+         countRowTotal(counting);
+      }
+      if(text.length() == 0)
+      {
+         return false;
+      }
+         return true;
+   }  
+
+   private void countRowTotal(int[] counting)
+   {    
+      if(counting[actualHeight - 3] != 2)
+      {
+         int countingTotal = 0;
+         for(int index = 0; index < actualHeight - 2; index++)
+         {
+            if(index == 0 && counting[index] == 2)
+            {
+               countingTotal += 1;
+            }
+            else if(index != 0)
+            {
+               countingTotal += Math.pow(counting[index], index);
+            }    
+         }
+
+         text += readCharFromCol(countingTotal);     
+      }
    }
-   
+
+
+
    public void displayTextToConsole()
    {
-      
+      System.out.println(text);
    }
-   
+
    public void displayImageToConsole()
    {
-      
+      for(int topBoarder = 0; topBoarder < actualWidth + 2; topBoarder++)
+      {
+          System.out.print("-");
+      }
+      for(int r = (image.MAX_HEIGHT - 1); r > (image.MAX_HEIGHT - 1) - actualHeight; r--)
+      {
+         System.out.print("|");
+         for(int c = 0; c < actualWidth; c++)
+         {
+            if(image.getPixel(r,c) == true)
+            {
+               System.out.print(BLACK_CHAR);
+            }
+            else
+            {
+               System.out.print(WHITE_CHAR);
+            }    
+         }
+         System.out.print("|");
+         System.out.println();
+      }   
    }
-   
+
    private void cleanImage()
    {
-      
+      int colunmStart = 0;
+      int rowStart = 0;
+      boolean breakFlag = false;
+      for(int column = 0; column < image.MAX_WIDTH; column++)
+      {
+         if(breakFlag == true)
+         {
+            break;
+         }
+         for(int row = image.MAX_HEIGHT - 1; row > 0; row--)
+         {
+            if(image.getPixel(row, column) == true)
+            {
+               colunmStart = column;
+               rowStart = (image.MAX_HEIGHT - 1) - row;
+               breakFlag = true;
+               break;
+            }    
+         }
+      }
+      moveImageToLowerLeft(rowStart, colunmStart);
    }
-   
-   private void moveImageToLowerLeft()
+
+   private void moveImageToLowerLeft(int startRow, int startColumn)
    {
-      
+      for(int column = 0; column < image.MAX_WIDTH - startColumn; column++)
+      {
+         for(int row = 29; row > 0 + startRow; row--)
+         {
+            image.setPixel(row, column, image.getPixel((row - startRow), (column + startColumn)));
+            image.setPixel((row - startRow), (column + startColumn),false);
+         }
+      }
    }
-   
-   private void shiftImageDown(int offset)
-   {
-      
-   }
-   
-   private void shiftImageLeft(int offset)
-   {
-      
-   }
-   
+
    private char readCharFromCol(int col)
    {
-      return'a';
+      return (char) col;
    }
-   
+
    private boolean WriteCharToCol(int col, int code)
    {
       return false;
    }
-   
+
    public void displayRawImage() // optional
    {
-      
+
    }
-   
-   private void clearImage() // optional
+
+   private void clearImage() // optional [MAX_HEIGHT][MAX_WIDTH]
    {
       
+       for (int row = 0; row < image.MAX_HEIGHT; row++)
+      {
+         for (int column = 0; column < image.MAX_WIDTH; column++)
+         {
+            
+             image.setPixel(row,column,false);
+         }
+      }
    }
 }
