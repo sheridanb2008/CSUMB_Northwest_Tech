@@ -6,7 +6,7 @@
  * Objective:
  */
 
-import java.io.*;
+
 
 public class Assign4
 {
@@ -53,6 +53,26 @@ public class Assign4
                "                                          "
 
          };
+      String[] sImageIn_3 =
+         {
+               "                                      ",
+               "                                      ",
+               "* * * * * * * * * * * * * * * * * * * ",
+               "*                                    *",
+               "***** * ***** ****** ******* **** **  ",
+               "* ************************************",
+               "**  *    *  * * **    *    * *  *  *  ",
+               "* *               *    **     **  *  *",
+               "**  *   * * *  * ***  * ***  *        ",
+               "**      **    * *    *     *    *  * *",
+               "** *  * * **   *****  **  *    ** *** ",
+               "**************************************",
+               "                                      ",
+               "                                      ",
+               "                                      ",
+               "                                      "
+
+         };
 
       BarcodeImage bc = new BarcodeImage(sImageIn);
       DataMatrix dm = new DataMatrix(bc);
@@ -69,11 +89,24 @@ public class Assign4
       dm.displayTextToConsole();
       dm.displayImageToConsole();
 
-      // create your own message
-      dm.readText("What a great resume builder this is!");
-      //dm.generateImageFromText();
+      // third secret message
+      bc = new BarcodeImage(sImageIn_3);
+      dm.scan(bc);
+      dm.translateImageToText();
       dm.displayTextToConsole();
       dm.displayImageToConsole();
+
+      // create your own message
+      dm.readText("What a great resume builder this is!");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+
+      // create your own message test compare
+      dm.readText("CSUMB CSIT online program is top notch.");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole(); 
    }
 }
 
@@ -166,10 +199,6 @@ class BarcodeImage implements Cloneable
       return false;   
    }
 
-   private int checkSize(String[] data) // optional
-   {
-      return 0;
-   }
 
    public void displayToConsole()  // optional
    {
@@ -227,10 +256,10 @@ class DataMatrix implements BarcodeIO
 
    public DataMatrix(String text)
    {
-      
-       readText(text);
-      
-       
+
+      readText(text);
+
+
    }
 
    public boolean readText(String text)
@@ -239,7 +268,7 @@ class DataMatrix implements BarcodeIO
       this.text = text;
       if(this.text != text)
       {
-          return false;
+         return false;
       }
       return true;
    }
@@ -295,6 +324,24 @@ class DataMatrix implements BarcodeIO
 
    public boolean generateImageFromText()
    {
+      clearImage();
+      for(int column = 1; column < text.length() + 3; column++)
+      {
+         for(int row = 10; row > 0; row--)
+         {
+            if(row == 10 || column == 1 || column %2 != 0 && row == 1 || 
+                  column == (text.length() + 2) && row%2 == 0)
+            {
+               image.setPixel(row,column,true);
+            }
+         }
+      }  
+      scan(image);  
+
+      for(int col = 1; col <  text.length() + 1; col++)
+      {
+         WriteCharToCol(col, ((int) text.charAt(col - 1)));          
+      }
       return false;
    }
 
@@ -304,7 +351,8 @@ class DataMatrix implements BarcodeIO
       text = "";
       for(int column = 0; column < actualWidth; column++)
       {
-         for(int row = (image.MAX_HEIGHT - 2), countIndex = 0; row > ((image.MAX_HEIGHT - 2) - actualHeight); row--, countIndex++)
+         for(int row = (image.MAX_HEIGHT - 2), countIndex = 0; row >
+         ((image.MAX_HEIGHT - 2) - actualHeight); row--, countIndex++)
          {
             if(image.getPixel(row,column) == true)
             {    
@@ -321,7 +369,7 @@ class DataMatrix implements BarcodeIO
       {
          return false;
       }
-         return true;
+      return true;
    }  
 
    private void countRowTotal(int[] counting)
@@ -345,8 +393,6 @@ class DataMatrix implements BarcodeIO
       }
    }
 
-
-
    public void displayTextToConsole()
    {
       System.out.println(text);
@@ -356,9 +402,12 @@ class DataMatrix implements BarcodeIO
    {
       for(int topBoarder = 0; topBoarder < actualWidth + 2; topBoarder++)
       {
-          System.out.print("-");
+         System.out.print("-");
+
       }
-      for(int r = (image.MAX_HEIGHT - 1); r > (image.MAX_HEIGHT - 1) - actualHeight; r--)
+      System.out.println();
+      for(int r = (image.MAX_HEIGHT - actualHeight) ;
+            r < image.MAX_HEIGHT; r++)
       {
          System.out.print("|");
          for(int c = 0; c < actualWidth; c++)
@@ -408,7 +457,8 @@ class DataMatrix implements BarcodeIO
       {
          for(int row = 29; row > 0 + startRow; row--)
          {
-            image.setPixel(row, column, image.getPixel((row - startRow), (column + startColumn)));
+            image.setPixel(row, column, image.getPixel((row - startRow), 
+                  (column + startColumn)));
             image.setPixel((row - startRow), (column + startColumn),false);
          }
       }
@@ -421,23 +471,41 @@ class DataMatrix implements BarcodeIO
 
    private boolean WriteCharToCol(int col, int code)
    {
+      int[] container = new int[8];
+      int next = 0;
+      while (code > 0 )
+      {
+         container[next] = code%2;
+         next++;
+         code = code / 2;
+      }
+
+      for(int i = 0, row = (image.MAX_HEIGHT - 2); 
+            i < container.length; row--, i++)
+      {
+         if(container[i] == 1)
+         {
+            image.setPixel(row,col,true);
+         }
+         else
+         {
+            image.setPixel(row,col,false);
+         }
+
+      }    
+
       return false;
-   }
-
-   public void displayRawImage() // optional
-   {
-
    }
 
    private void clearImage() // optional [MAX_HEIGHT][MAX_WIDTH]
    {
-      
-       for (int row = 0; row < image.MAX_HEIGHT; row++)
+
+      for (int row = 0; row < image.MAX_HEIGHT; row++)
       {
          for (int column = 0; column < image.MAX_WIDTH; column++)
          {
-            
-             image.setPixel(row,column,false);
+
+            image.setPixel(row,column,false);
          }
       }
    }
