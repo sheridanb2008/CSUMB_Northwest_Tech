@@ -1,5 +1,5 @@
 /*
- * Assignment: GUI Cards
+ * Assignment: GUI Cards - Phase 1
  * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
  * Course:     CST338 - Spring B
  * Date:       04/??/2019
@@ -9,7 +9,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Assign5
+public class Assign5phase1
 {
    static final int NUM_CARD_IMAGES = 57; // 52 + 4 jokers + 1 back-of-card image
    static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
