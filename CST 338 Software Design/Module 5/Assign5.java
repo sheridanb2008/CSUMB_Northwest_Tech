@@ -1,40 +1,41 @@
+/*
+ * Assignment: GUI Cards
+ * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Course:     CST338 - Spring B
+ * Date:       04/??/2019
+ * Objective:
+ */
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Assign5
 {
-   // static for the 57 icons and their corresponding labels
-   // normally we would not have a separate label for each card, but
-   // if we want to display all at once using labels, we need to.
-
    static final int NUM_CARD_IMAGES = 57; // 52 + 4 jokers + 1 back-of-card image
    static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
 
    static void loadCardIcons()
    {
+      String suit;
+      String cardValue;
+      int cardCount = 0;
+
       // Builds the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
-      // in a SHORT loop.  For each file name, read it in and use it to
-      // instantiate each of the 57 Icons in the icon[] array.
-
-      String suit = "";
-      String cardValue = "";
-      ImageIcon cardIcon = new ImageIcon();
-
-      for (int i = 0; i < icon.length - 1; i++)
+      // and inserts them into the ImageIcon array.
+      for (int suitCount = 0; suitCount < 4; suitCount++)
       {
-         for (int j = 0; j < 4; j++)
-         {
-            suit = turnIntIntoCardSuit(j);
+         suit = turnIntIntoCardSuit(suitCount);
 
-            for (int k = 0; k < 14; k++)
-            {
-               ;
-               cardValue = turnIntIntoCardValue(k);
-               icon[i] = cardIcon;
-               i++;
-            }
+         for (int valueCount = 0; valueCount < 14; valueCount++)
+         {
+            cardValue = turnIntIntoCardValue(valueCount);
+            icon[cardCount] = new ImageIcon(Assign5.class.getResource("images/" + cardValue + suit + ".gif"));
+            cardCount++;
          }
       }
+
+      // Adds the card-back image icon
+      icon[cardCount] = new ImageIcon(Assign5.class.getResource("images/BK.gif"));
    }
 
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
@@ -83,4 +84,3 @@ public class Assign5
       frmMyWindow.setVisible(true);
    }
 }
-
