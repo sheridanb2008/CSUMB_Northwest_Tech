@@ -29,13 +29,13 @@ public class Assign5phase1
          for (int valueCount = 0; valueCount < 14; valueCount++)
          {
             cardValue = turnIntIntoCardValue(valueCount);
-            icon[cardCount] = new ImageIcon(Assign5.class.getResource("images/" + cardValue + suit + ".gif"));
+            icon[cardCount] = new ImageIcon(Assign5phase1.class.getResource("images/" + cardValue + suit + ".gif"));
             cardCount++;
          }
       }
 
       // Adds the card-back image icon
-      icon[cardCount] = new ImageIcon(Assign5.class.getResource("images/BK.gif"));
+      icon[cardCount] = new ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
    }
 
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
@@ -84,3 +84,4 @@ public class Assign5phase1
       frmMyWindow.setVisible(true);
    }
 }
+
