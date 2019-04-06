@@ -44,23 +44,22 @@ public class Assign5phase2
       // Create 5 explicit card sets
       //
       // Create cards
-      System.out.println("-------- Class Hand Test --------");
-      Card card0 = new Card();
-      Card card1 = new Card('9', Card.Suit.diamonds);
-      Card card2 = new Card('J', Card.Suit.clubs);
-      Card card3 = new Card('A', Card.Suit.diamonds);
-      Card card4 = new Card('8', Card.Suit.hearts);
+//      System.out.println("-------- Class Hand Test --------");
+//      Card card0 = new Card();
+//      Card card1 = new Card('9', Card.Suit.diamonds);
+//      Card card2 = new Card('J', Card.Suit.clubs);
+//      Card card3 = new Card('A', Card.Suit.diamonds);
+//      Card card4 = new Card('8', Card.Suit.hearts);
 
       // Create one hand object
-      Hand playersHand = new Hand();
+//      Hand playersHand = new Hand();
 
       // Loop to populate playersHand with Card objects
-      int count = 0;
-      int testCardsCount = 0;
-      Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
-
-      Card.arraySort(testCards, testCards.length);
-      System.out.println("test");
+//      int count = 0;
+//      int testCardsCount = 0;
+//      Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
+//
+//      Card.arraySort(testCards, testCards.length);
 
 //      while(count < playersHand.MAX_CARDS)
 //      {
@@ -95,39 +94,40 @@ public class Assign5phase2
       //    Two decks
       //
       // Test deck class un-shuffled 2 decks
-/*      System.out.println("-------- Class Deck Test --------");
-//      Deck deck1 = new Deck(2);
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//      }
-//      // re-initialize deck / shuffle
-//      deck1.init(2);
-//      deck1.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//      }
-//      System.out.println();
-//      //    One Deck
-//      // Test deck class un-shuffled 1 decks
-//      Deck deck2 = new Deck(1);
-//      for(int next = 0; next < (52) - 1 ; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
-//      // re-initialize deck / shuffle
-//      deck2.init(2);
-//      deck2.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52) - 1; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
-//*/
+      System.out.println("-------- Class Deck Test --------");
+      Deck deck1 = new Deck(2);
+      for(int next = 0; next < (52 * 2) - 1; next++)
+      {
+         System.out.print(deck1.dealCard() + " / ");
+         System.out.println(deck1.getNumCards());
+      }
+      // re-initialize deck / shuffle
+      deck1.init(2);
+      deck1.shuffle();
+      System.out.println();
+      // output shuffled deck
+      for(int next = 0; next < (52 * 2) - 1; next++)
+      {
+         System.out.print(deck1.dealCard() + " / ");
+      }
+      System.out.println();
+      //    One Deck
+      // Test deck class un-shuffled 1 decks
+      Deck deck2 = new Deck(1);
+      for(int next = 0; next < (52) - 1 ; next++)
+      {
+         System.out.print(deck2.dealCard() + " / ");
+      }
+      // re-initialize deck / shuffle
+      deck2.init(2);
+      deck2.shuffle();
+      System.out.println();
+      // output shuffled deck
+      for(int next = 0; next < (52) - 1; next++)
+      {
+         System.out.print(deck2.dealCard() + " / ");
+      }
+
 //      //************** Deck/Hand Testing ****************
 //      // Prompt user to input number of hands to deal.
 //      Scanner keyboard = new Scanner(System.in);
@@ -211,6 +211,7 @@ public class Assign5phase2
 //      // ************ End Deck/Hand Testing **************
    }
 }
+
 // ******************** Card Class ********************
 class Card
 {
@@ -667,5 +668,48 @@ class Deck
          // Input into the correct position in masterPack
          masterPack[next] = new Card(value[next - (13 * (next/13))],suitValue);
       }
+   }
+
+   // make sure that there are not too many instances of the card in the deck if
+   // you add it.  Return false if there will be too many.  It should put the
+   // card on the top of the deck.
+   public boolean addCard(Card card)
+   {
+      // code tbd...
+      return true;
+   }
+
+   // you are looking to remove a specific card from the deck.  Put the current
+   // top card into its place.  Be sure the card you need is actually still in
+   // the deck, if not return false.
+   public boolean removeCard(Card card)
+   {
+      // code tbd...
+      return true;
+   }
+
+   // Puts all of the cards in the deck back into the right order according to
+   // their values.
+   public void sort(Card[] cards, int arraySize)
+   {
+      Card.arraySort(cards, arraySize);
+   }
+
+   // Returns the number of cards remaining in the deck.
+   public int getNumCards()
+   {
+      int cardCount = 0;
+
+      // Loop through the pack of cards.
+      for (int i = 0; i < cards.length; i ++)
+      {
+         // Add 1 to the card count if card is found.
+         if (cards[i] != null)
+         {
+            cardCount++;
+         }
+      }
+      // Return the total number of cards in the deck.
+      return cardCount;
    }
 }
