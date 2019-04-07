@@ -7,12 +7,16 @@
  */
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Assign5phase2
 {
 
    public static void main(String[] args)
    {
+      Card test = Card.generateRandomCard();
+      System.out.println(test);
+
       //// ************** Card Testing *********************
       //
       // Create cards for testing
@@ -20,7 +24,7 @@ public class Assign5phase2
 //      Card test = new Card();
 //      Card test2 = new Card('N', Card.Suit.diamonds);
 //      System.out.println(test.getValue());
-//      Card test3 = new Card('J', Card.Suit.clubs);
+//      Card testCard = new Card('7', Card.Suit.diamonds);
       //Card test2 = new Card('A', Card.Suit.diamonds);
       //Card test3 = new Card('N', Card.Suit.hearts);
       // Output cards to console
@@ -94,39 +98,40 @@ public class Assign5phase2
       //    Two decks
       //
       // Test deck class un-shuffled 2 decks
-      System.out.println("-------- Class Deck Test --------");
-      Deck deck1 = new Deck(2);
-      for(int next = 0; next < (52 * 2) - 1; next++)
-      {
-         System.out.print(deck1.dealCard() + " / ");
-         System.out.println(deck1.getNumCards());
-      }
-      // re-initialize deck / shuffle
-      deck1.init(2);
-      deck1.shuffle();
-      System.out.println();
-      // output shuffled deck
-      for(int next = 0; next < (52 * 2) - 1; next++)
-      {
-         System.out.print(deck1.dealCard() + " / ");
-      }
-      System.out.println();
-      //    One Deck
-      // Test deck class un-shuffled 1 decks
-      Deck deck2 = new Deck(1);
-      for(int next = 0; next < (52) - 1 ; next++)
-      {
-         System.out.print(deck2.dealCard() + " / ");
-      }
-      // re-initialize deck / shuffle
-      deck2.init(2);
-      deck2.shuffle();
-      System.out.println();
-      // output shuffled deck
-      for(int next = 0; next < (52) - 1; next++)
-      {
-         System.out.print(deck2.dealCard() + " / ");
-      }
+//      System.out.println("-------- Class Deck Test --------");
+//      Deck deck1 = new Deck(2);
+//      for(int next = 0; next < (52 * 2) - 1; next++)
+//      {
+//         System.out.print(deck1.dealCard() + " / ");
+//         System.out.println(deck1.getNumCards());
+//      }
+//      deck1.addCard(testCard);
+//      // re-initialize deck / shuffle
+//      deck1.init(2);
+//      deck1.shuffle();
+//      System.out.println();
+//      // output shuffled deck
+//      for(int next = 0; next < (52 * 2) - 1; next++)
+//      {
+//         System.out.print(deck1.dealCard() + " / ");
+//      }
+//      System.out.println();
+//      //    One Deck
+//      // Test deck class un-shuffled 1 decks
+//      Deck deck2 = new Deck(1);
+//      for(int next = 0; next < (52) - 1 ; next++)
+//      {
+//         System.out.print(deck2.dealCard() + " / ");
+//      }
+//      // re-initialize deck / shuffle
+//      deck2.init(2);
+//      deck2.shuffle();
+//      System.out.println();
+//      // output shuffled deck
+//      for(int next = 0; next < (52) - 1; next++)
+//      {
+//         System.out.print(deck2.dealCard() + " / ");
+//      }
 
 //      //************** Deck/Hand Testing ****************
 //      // Prompt user to input number of hands to deal.
@@ -279,16 +284,19 @@ class Card
    {
       return this.suit;
    }
+
    // accessor for card value
    public char getValue()
    {
       return this.value;
    }
+
    // accessor for card error flag
    public boolean getErrorFlag()
    {
       return this.errorFlag;
    }
+
    // objective: Return a boolean if two cards are equal
    public static boolean equals(Card card)
    {
@@ -308,7 +316,8 @@ class Card
       if(value == 'A' || value == '2' || value == '3' || value == '4'
             || value == '5' || value == '6' || value == '7'
             || value == '8' || value == '9' || value == 'T'
-            || value == 'J' || value == 'Q' || value == 'K')
+            || value == 'J' || value == 'Q' || value == 'K'
+            || value == 'X')
       {
          return true;
       }
@@ -369,6 +378,26 @@ class Card
             break;
       }
       return i;
+   }
+
+   // Generates a random card.
+   public static Card generateRandomCard()
+   {
+      Random rand = new Random();
+
+      // Generates a random number to get a card value (A, 2, 3 ... ) from
+      // valuRanks.
+      int randomNumber1 = rand.nextInt(14);
+      char cardValue = valuRanks[randomNumber1];
+
+      // Generates a random number to get a suit (clubs, diamonds, etc.) for
+      // the card.
+      int randomNumber2 = rand.nextInt(4);
+      Suit cardSuit = Suit.values()[randomNumber2];
+
+      // Values for the cardValue and cardSuit are sent to the Card constructor.
+      Card randomCard = new Card(cardValue, cardSuit);
+      return randomCard;
    }
 }
 
@@ -500,8 +529,8 @@ class Hand
 // ******************** Class Deck ********************
 class Deck
 {
-   public final int MAX_CARDS = (6*52);
-   private static Card[] masterPack = new Card[52];
+   public final int MAX_CARDS = (6*56);
+   private static Card[] masterPack = new Card[56];
    private Card[] cards;
    private int topCard;
    private int numPacks;
@@ -528,7 +557,7 @@ class Deck
    }
 
    /* Define init
-    *   Objective: Checks the range of the inputed number of packs
+    *   Objective: Checks the range of the inputted number of packs
     *   and fills the array of cards with cards from the masterPack.
     */
    public void init(int numPacks)
@@ -537,17 +566,17 @@ class Deck
       int totalCards;
       if(numPacks < 1)
       {
-         totalCards = 52;
+         totalCards = 56;
          this.numPacks = 1;
       }
-      else if((numPacks * 52) > MAX_CARDS)
+      else if((numPacks * 56) > MAX_CARDS)
       {
          totalCards = MAX_CARDS;
          this.numPacks = 6;
       }
       else
       {
-         totalCards = numPacks * 52;
+         totalCards = numPacks * 56;
          this.numPacks = numPacks;
       }
       // set the size of the cards array
@@ -557,7 +586,7 @@ class Deck
       // Copy cards from masterPack to cards
       for(int next = 0; next < totalCards; next++)
       {
-         this.cards[next] = masterPack[next - (52 * (next/52))];
+         this.cards[next] = masterPack[next - (56 * (next/56))];
       }
    }
 
@@ -569,11 +598,11 @@ class Deck
    {
       Card holder;
       // Loop trough the total of cards times 10
-      for (int next = 0; next < (52 * numPacks) * 10; next ++)
+      for (int next = 0; next < (56 * numPacks) * 10; next ++)
       {
          // create random numbers
-         int randNumber1 = ( int )(Math.random() * (52 * numPacks));
-         int randNumber2 = ( int )(Math.random() * (52 * numPacks));
+         int randNumber1 = ( int )(Math.random() * (56 * numPacks));
+         int randNumber2 = ( int )(Math.random() * (56 * numPacks));
          // verify random numbers are not equal to each other
          if (randNumber1 != randNumber2)
          {
@@ -593,7 +622,7 @@ class Deck
    public Card dealCard()
    {
       // check to see if the top card is valid
-      if(this.topCard == (52 * numPacks))
+      if(this.topCard == (56 * numPacks))
       {
          // return invalid card if not valid
          Card invalid = new Card('N', Card.Suit.diamonds);
@@ -622,7 +651,7 @@ class Deck
    public Card inspectCard(int k)
    {
       // verify parameter 'k' is a valid card and return card
-      if(k < (52 * numPacks) - 1 && k >= 0 && cards[k] != null)
+      if(k < (56 * numPacks) - 1 && k >= 0 && cards[k] != null)
       {
          return cards[k];
       }
@@ -646,12 +675,12 @@ class Deck
          return;
       }
       // build character set for input
-      char value[] = {'K','Q','J','T','9','8','7','6','5','4','3','2','A'};
+      char value[] = {'X','K','Q','J','T','9','8','7','6','5','4','3','2','A'};
       // Create a suite address based on required inputs
       Card.Suit suitValue;
-      for (int next = 0; next < 52; next++)
+      for (int next = 0; next < 56; next++)
       {
-         switch(next / 13)
+         switch(next / 14)
          {
             case 0:
                suitValue =  Card.Suit.spades;
@@ -666,26 +695,56 @@ class Deck
                suitValue =  Card.Suit.clubs;
          }
          // Input into the correct position in masterPack
-         masterPack[next] = new Card(value[next - (13 * (next/13))],suitValue);
+         masterPack[next] = new Card(value[next - (14 * (next/14))],suitValue);
       }
    }
 
-   // make sure that there are not too many instances of the card in the deck if
-   // you add it.  Return false if there will be too many.  It should put the
-   // card on the top of the deck.
+   // Adds a card to the top of the deck. Prior to adding the card checks that
+   // there aren't too many instances of the card already existing.
    public boolean addCard(Card card)
    {
-      // code tbd...
+      // Get the position value of the top card.
+      int topCard = topCard();
+
+      // Loop through the deck of cards.
+      for(int i = topCard; i < cards.length; i++)
+      {
+         if (cards[i].getSuit() == card.getSuit() && cards[i].getValue() ==
+            card.getValue())
+         {
+            // False is returned if there are too many instances of the card.
+            return false;
+         }
+      }
+
+      // Card is placed on top of the deck, true is returned.
+      cards[topCard - 1] = card;
       return true;
    }
 
-   // you are looking to remove a specific card from the deck.  Put the current
-   // top card into its place.  Be sure the card you need is actually still in
-   // the deck, if not return false.
+   // Removes a specific card from the deck and places the current top card into
+   // its place.
    public boolean removeCard(Card card)
    {
-      // code tbd...
-      return true;
+      // Get the position value of the top card.
+      int topCard = topCard();
+
+      // Loop through the deck of cards.
+      for(int i = topCard; i < cards.length; i++)
+      {
+         if (cards[i].getSuit() == card.getSuit() && cards[i].getValue() ==
+            card.getValue())
+         {
+            // Copy the top card into the removed cards position. Set top card
+            // position to null.
+            cards[i] = cards[topCard];
+            cards[topCard] = null;
+            return true;
+         }
+      }
+
+      // If the card is not in the deck return false.
+      return false;
    }
 
    // Puts all of the cards in the deck back into the right order according to
@@ -701,7 +760,7 @@ class Deck
       int cardCount = 0;
 
       // Loop through the pack of cards.
-      for (int i = 0; i < cards.length; i ++)
+      for (int i = 0; i < cards.length; i++)
       {
          // Add 1 to the card count if card is found.
          if (cards[i] != null)
