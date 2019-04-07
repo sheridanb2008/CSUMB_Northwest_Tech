@@ -21,8 +21,7 @@ public class Assign5phase2
    static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS]; 
    public static void main(String[] args)
    {
-      int k;
-      Icon tempIcon;
+      GUICard.loadCardIcons();
       //JFrame.setDefaultLookAndFeelDecorated(true);
       // establish main frame in which program will run
       CardTable myCardTable 
@@ -33,7 +32,48 @@ public class Assign5phase2
 
       // show everything to the user
       myCardTable.setVisible(true);
+     
+      /*
+      Icon[] testIcons = new Icon[5];
+      for(int i=0;i<5;i++)
+      {
+          testIcons[i] = GUICard.getBackCardIcon();
+      }
+      myCardTable.setComputerHand(testIcons);
+      myCardTable.setYourHand(testIcons);
+      //myCardTable.setYourCard(GUICard.getBackCardIcon());
+      //myCardTable.setComputerCard(GUICard.getBackCardIcon());
+      */
 
+      int numPacksPerDeck = 1;
+      int numJokersPerPack = 0;
+      int numUnusedCardsPerPack = 0;
+      Card[] unusedCardsPerPack = null;
+
+      CardGameFramework highCardGame = new CardGameFramework( 
+            numPacksPerDeck, numJokersPerPack,  
+            numUnusedCardsPerPack, unusedCardsPerPack, 
+            NUM_PLAYERS, NUM_CARDS_PER_HAND);
+      
+      highCardGame.deal();
+      Hand yourHand = highCardGame.getHand(0);
+      int numYourHand = yourHand.getNumCards();
+      Icon[] icons = new Icon[numYourHand];
+      for(int i=0;i<numYourHand;i++)
+      {
+          icons[i] = GUICard.getIcon(yourHand.inspectCard(i));
+      }
+      myCardTable.setYourHand(icons);
+
+      Hand computerHand = highCardGame.getHand(1);
+      int numComputerHand = computerHand.getNumCards();
+      icons = new Icon[numComputerHand];
+      for(int i=0;i<numComputerHand;i++)
+      {
+          icons[i] = GUICard.getIcon(computerHand.inspectCard(i));
+      }
+      myCardTable.setComputerHand(icons);
+      
       // CREATE LABELS ----------------------------------------------------
       //code goes here ...
 
@@ -365,6 +405,11 @@ class Hand
       return card;
    }
 
+   public void sort()
+   {
+       sort(myCards,myCards.length);
+   }
+
    public void sort(Card[] cards, int arraySize)
    {
       Card.arraySort(cards, arraySize);
@@ -636,23 +681,24 @@ class CardTable extends JFrame
    public JPanel pnlComputerHand;
    public JPanel pnlHumanHand;
    public JPanel pnlPlayArea;
-   public JPanel pnlCardArea;
+   private JLabel computerCardIcon;
+   private JLabel yourCardIcon;
 
    CardTable(String title, int numCardsPerHand, int numPlayers)
    {
       super(title);
 
       LayoutManager layoutManager = new GridLayout(3,1);
+      LayoutManager handLayoutManager = new GridLayout(1, 0);
+      LayoutManager cardLayoutManager = new GridLayout(2,2);
+
       setLayout(layoutManager);
-      pnlComputerHand = new JPanel(layoutManager);
-      pnlHumanHand = new JPanel(layoutManager);
-      pnlPlayArea = new JPanel(layoutManager);
+      pnlComputerHand = new JPanel(handLayoutManager);
+      pnlHumanHand = new JPanel(handLayoutManager);
+      pnlPlayArea = new JPanel(cardLayoutManager);
 
       this.numCardsPerHand = Math.min(numCardsPerHand, MAX_CARDS_PER_HAND);
       this.numPlayers = Math.min(numPlayers, MAX_PLAYERS);
-
-
-
       // set up layout which will control placement of buttons, etc.
 
       // Set panels
@@ -664,12 +710,12 @@ class CardTable extends JFrame
       pnlHumanHand.setVisible(true);
       pnlPlayArea.setVisible(true);
       
-      LayoutManager cardLayoutManager = new GridLayout(2,2);
-      pnlCardArea = new JPanel(cardLayoutManager);
-      JLabel computerCardIcon = 
-            new JLabel("Computer Card Icon Goes Here", JLabel.CENTER );
-      JLabel yourCardIcon =
-            new JLabel( "Your Card Icon Goes Here", JLabel.CENTER );
+      
+      
+      computerCardIcon = 
+            new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER );
+      yourCardIcon =
+            new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER );
       
       JLabel computerCardLabel = new JLabel( "Computer", JLabel.CENTER );
       JLabel yourCardLabel = new JLabel( "You", JLabel.CENTER );
@@ -683,6 +729,46 @@ class CardTable extends JFrame
       add(pnlHumanHand);
 
    }
+
+   public void setComputerHand(Icon[] icons)
+   {
+        pnlComputerHand.removeAll();
+
+        for(int i=0;i<icons.length;i++)
+        {
+            pnlComputerHand.add(new JLabel(icons[i]));
+        }
+        pnlComputerHand.revalidate();
+        pnlComputerHand.repaint();
+        revalidate();
+        repaint();
+   }
+
+   public void setYourHand(Icon[] icons)
+   {
+        pnlHumanHand.removeAll();
+        for(int i=0;i<icons.length;i++)
+        {
+            pnlHumanHand.add(new JLabel(icons[i]));
+        }
+        pnlHumanHand.revalidate();
+        pnlHumanHand.repaint();
+   }
+    
+   public void setComputerCard(Icon icon)
+   {
+       computerCardIcon.setIcon(icon);
+       pnlPlayArea.revalidate();
+       pnlPlayArea.repaint();
+   }
+    
+   public void setYourCard(Icon icon)
+   {
+       yourCardIcon.setIcon(icon);
+       pnlPlayArea.revalidate();
+       pnlPlayArea.repaint();
+   }
+
 
    // Accessor for number of cards per hand
    public int numCardsPerHand()
@@ -720,17 +806,17 @@ class GUICard
             for (int valueCount = 0; valueCount < 14; valueCount++)
             {
                cardValue = turnIntIntoCardValue(valueCount);
-               icon[valueCount][suitCount] = new ImageIcon(Assign5phase1
+               icon[valueCount][suitCount] = new ImageIcon(GUICard
                      .class.getResource("images/" + cardValue + suit + ".gif"));
             }
          }
 
          // Adds the card-back image icon
-         iconBack = new ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
+         iconBack = new ImageIcon(GUICard.class.getResource("images/BK.gif"));
       }
    static public int valueAsInt(Card card)
    {
-      return (int)card.getValue();
+      return Card.getCardRank(card.getValue());
    }
    static public Icon getIcon(Card card)
    {
@@ -753,7 +839,6 @@ class GUICard
       }
    }
 
-    
    static public Icon getBackCardIcon()
    {
        return iconBack;   
