@@ -636,7 +636,7 @@ class CardTable extends JFrame
    public JPanel pnlComputerHand;
    public JPanel pnlHumanHand;
    public JPanel pnlPlayArea;
-
+   public JPanel pnlCardArea;
 
    CardTable(String title, int numCardsPerHand, int numPlayers)
    {
@@ -658,8 +658,26 @@ class CardTable extends JFrame
       // Set panels
       pnlComputerHand.setBorder(BorderFactory
             .createTitledBorder("Computer Hand"));
-      pnlPlayArea.setBorder(BorderFactory.createTitledBorder("Playing Area"));
-      pnlHumanHand.setBorder(BorderFactory.createTitledBorder("Your Hand"));
+      pnlHumanHand.setBorder(BorderFactory.createTitledBorder("Playing Area"));
+      pnlPlayArea.setBorder(BorderFactory.createTitledBorder("Your Hand"));
+      pnlComputerHand.setVisible(true);
+      pnlHumanHand.setVisible(true);
+      pnlPlayArea.setVisible(true);
+      
+      LayoutManager cardLayoutManager = new GridLayout(2,2);
+      pnlCardArea = new JPanel(cardLayoutManager);
+      JLabel computerCardIcon = 
+            new JLabel("Computer Card Icon Goes Here", JLabel.CENTER );
+      JLabel yourCardIcon =
+            new JLabel( "Your Card Icon Goes Here", JLabel.CENTER );
+      
+      JLabel computerCardLabel = new JLabel( "Computer", JLabel.CENTER );
+      JLabel yourCardLabel = new JLabel( "You", JLabel.CENTER );
+      pnlPlayArea.add(computerCardIcon);
+      pnlPlayArea.add(yourCardIcon);
+      pnlPlayArea.add(computerCardLabel);
+      pnlPlayArea.add(yourCardLabel);
+      
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
