@@ -6,214 +6,46 @@
  * Objective:  x
  */
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
+import javax.swing.*;
 
 public class Assign5phase2
 {
-
+   static int NUM_CARDS_PER_HAND = 7;
+   static int  NUM_PLAYERS = 2;
+   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];  
+   static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS]; 
+   static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS]; 
    public static void main(String[] args)
    {
-      Card test = Card.generateRandomCard();
-      System.out.println(test);
+      int k;
+      Icon tempIcon;
+      //JFrame.setDefaultLookAndFeelDecorated(true);
+      // establish main frame in which program will run
+      CardTable myCardTable 
+      = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+      myCardTable.setSize(800, 600);
+      myCardTable.setLocationRelativeTo(null);
+      myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      //// ************** Card Testing *********************
-      //
-      // Create cards for testing
-//      System.out.println("-------- Class Card Test --------");
-//      Card test = new Card();
-//      Card test2 = new Card('N', Card.Suit.diamonds);
-//      System.out.println(test.getValue());
-//      Card testCard = new Card('7', Card.Suit.diamonds);
-      //Card test2 = new Card('A', Card.Suit.diamonds);
-      //Card test3 = new Card('N', Card.Suit.hearts);
-      // Output cards to console
-//      System.out.println(test);
-//      System.out.println(test2);
-//      System.out.println(test3 + "\n");
+      // show everything to the user
+      myCardTable.setVisible(true);
 
-      // Test set function in card class
-//      test.set('N', Card.Suit.diamonds);
-//      test2.set('Q', Card.Suit.spades);
-//      System.out.println(test);
-//      System.out.println(test2);
-//      System.out.println(test3);
-//      //Tests the equals method
-//      System.out.println("\nTest of the equals method");
-//      Card test4 = new Card();
-//      System.out.println(Card.equals(test4));
+      // CREATE LABELS ----------------------------------------------------
+      //code goes here ...
 
+      // ADD LABELS TO PANELS -----------------------------------------
+      //code goes here ...
 
-      // ************** Hand Testing *********************
-      // Create 5 explicit card sets
-      //
-      // Create cards
-//      System.out.println("-------- Class Hand Test --------");
-//      Card card0 = new Card();
-//      Card card1 = new Card('9', Card.Suit.diamonds);
-//      Card card2 = new Card('J', Card.Suit.clubs);
-//      Card card3 = new Card('A', Card.Suit.diamonds);
-//      Card card4 = new Card('8', Card.Suit.hearts);
+      // and two random cards in the play region (simulating a computer/hum ply)
+      //code goes here ...
 
-      // Create one hand object
-//      Hand playersHand = new Hand();
+      // show everything to the user
+      myCardTable.setVisible(true);
 
-      // Loop to populate playersHand with Card objects
-//      int count = 0;
-//      int testCardsCount = 0;
-//      Card[] testCards = new Card[] {card0, card1, card2, card3, card4};
-//
-//      Card.arraySort(testCards, testCards.length);
-
-//      while(count < playersHand.MAX_CARDS)
-//      {
-//         if (testCardsCount < 4)
-//         {
-//            playersHand.takeCard(testCards[testCardsCount]);
-//         }
-//         else
-//         {
-//            testCardsCount = 0;
-//            playersHand.takeCard(testCards[testCardsCount]);
-//         }
-//         count++;
-//         testCardsCount++;
-//      }
-//
-//      System.out.println("Hand full\nAfter deal");
-//      System.out.println(playersHand.toString());
-//      System.out.println("\nTesting inspectCard()");
-//      System.out.println(playersHand.inspectCard(4));
-//      System.out.println(playersHand.inspectCard(54));
-//
-//      while (playersHand.getNumCards() > 0)
-//      {
-//         System.out.println("Playing " + playersHand.playCard());
-//      }
-//
-//      System.out.println("\nAfter playing all cards.");
-//      System.out.println(playersHand.toString());
-
-      // ************** Deck Testing *********************
-      //    Two decks
-      //
-      // Test deck class un-shuffled 2 decks
-//      System.out.println("-------- Class Deck Test --------");
-//      Deck deck1 = new Deck(2);
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//         System.out.println(deck1.getNumCards());
-//      }
-//      deck1.addCard(testCard);
-//      // re-initialize deck / shuffle
-//      deck1.init(2);
-//      deck1.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52 * 2) - 1; next++)
-//      {
-//         System.out.print(deck1.dealCard() + " / ");
-//      }
-//      System.out.println();
-//      //    One Deck
-//      // Test deck class un-shuffled 1 decks
-//      Deck deck2 = new Deck(1);
-//      for(int next = 0; next < (52) - 1 ; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
-//      // re-initialize deck / shuffle
-//      deck2.init(2);
-//      deck2.shuffle();
-//      System.out.println();
-//      // output shuffled deck
-//      for(int next = 0; next < (52) - 1; next++)
-//      {
-//         System.out.print(deck2.dealCard() + " / ");
-//      }
-
-//      //************** Deck/Hand Testing ****************
-//      // Prompt user to input number of hands to deal.
-//      Scanner keyboard = new Scanner(System.in);
-//      System.out.print("How many hands? (1 - 10, please): ");
-//      int numberOfHands = keyboard.nextInt();
-//
-//      // Check if input is valid. If not prompt user to enter again.
-//      while (numberOfHands < 1 || numberOfHands > 10)
-//      {
-//         System.out.print("The number of hands needs to be between 1 "
-//               + "and 10. " + "Please enter again. ");
-//         numberOfHands = keyboard.nextInt();
-//      }
-//      System.out.println("UNSHUFFLED");
-//      // Create deck
-//      Deck singleDeck1 = new Deck(1);
-//      // Create Player hands in a Array
-//      Hand player[] = new Hand[numberOfHands];
-//      for(int next = 0; next < numberOfHands; next++)
-//      {
-//         player[next] = new Hand();
-//      }
-//      // tempory card used for move card from deck to hand
-//      Card holder = new Card();
-//      // Fill players hands with cards from deck un-shuffled
-//      while(holder.getErrorFlag() != true)
-//      {
-//         for(int next = 0; next < numberOfHands; next++)
-//         {
-//            holder = singleDeck1.dealCard();
-//            if(holder.getErrorFlag() == true)
-//            {
-//               break;
-//            }
-//            else
-//            {
-//               player[next].takeCard(holder);
-//            }
-//         }
-//      }
-//      // output to screen players hands
-//      for(int next = 0; next < numberOfHands; next++)
-//      {
-//         System.out.println(player[next].toString());
-//         System.out.println();
-//      }
-//      // Reset all players hands
-//      for(int next = 0; next < numberOfHands; next++)
-//      {
-//         player[next].resetHand();
-//      }
-//      System.out.println("SHUFFLED");
-//      // re-initialize deck and shuffle
-//      singleDeck1.init(1);
-//      singleDeck1.shuffle();
-//      Card holder2 = new Card();
-//      // fill players hands with cards from deck
-//      while(holder2.getErrorFlag() != true)
-//      {
-//         for(int next = 0; next < numberOfHands; next++)
-//         {
-//            holder2 = singleDeck1.dealCard();
-//            if(holder2.getErrorFlag() == true)
-//            {
-//               break;
-//            }
-//            else
-//            {
-//               player[next].takeCard(holder2);
-//            }
-//         }
-//      }
-//      // output players hands
-//      for(int next = 0; next < numberOfHands; next++)
-//      {
-//         System.out.println(player[next].toString());
-//         System.out.println();
-//      }
-//      // close keyboard
-//      keyboard.close();
-//      // ************ End Deck/Hand Testing **************
    }
 }
 
@@ -447,13 +279,26 @@ class Hand
 
    // removes the card in the top occupied position of myCards array and
    // returns it.
-   public Card playCard()
+   public Card playCard(int cardIndex)
    {
-      Card cardPlayed = myCards[numCards - 1];
-      myCards[numCards - 1] = null;
+      if ( numCards == 0 ) //error
+      {
+         //Creates a card that does not work
+         return new Card('M', Card.Suit.spades);
+      }
+      //Decreases numCards.
+      Card card = myCards[cardIndex];
+      
       numCards--;
-      return cardPlayed;
-   }
+      for(int i = cardIndex; i < numCards; i++)
+      {
+         myCards[i] = myCards[i+1];
+      }
+      
+      myCards[numCards] = null;
+      
+      return card;
+    }
 
    // Wraps toString() output into multiple lines.
    private String textWrap(String text)
@@ -771,4 +616,144 @@ class Deck
       // Return the total number of cards in the deck.
       return cardCount;
    }
+}
+
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+
+class CardTable extends JFrame
+{
+   private static final long serialVersionUID = 1L;
+   static int MAX_CARDS_PER_HAND = 56;
+   static int MAX_PLAYERS = 2;  // for now, we only allow 2 person games
+
+   private int numCardsPerHand;
+   private int numPlayers;
+
+   // The constructor filters input, adds any panels to the JFrame, 
+   // and establishes layouts according to the general description below.
+   public JPanel pnlComputerHand;
+   public JPanel pnlHumanHand;
+   public JPanel pnlPlayArea;
+
+
+   CardTable(String title, int numCardsPerHand, int numPlayers)
+   {
+      super(title);
+
+      LayoutManager layoutManager = new GridLayout(3,1);
+      setLayout(layoutManager);
+      pnlComputerHand = new JPanel(layoutManager);
+      pnlHumanHand = new JPanel(layoutManager);
+      pnlPlayArea = new JPanel(layoutManager);
+
+      this.numCardsPerHand = Math.min(numCardsPerHand, MAX_CARDS_PER_HAND);
+      this.numPlayers = Math.min(numPlayers, MAX_PLAYERS);
+
+
+
+      // set up layout which will control placement of buttons, etc.
+
+      // Set panels
+      pnlComputerHand.setBorder(BorderFactory
+            .createTitledBorder("Computer Hand"));
+      pnlPlayArea.setBorder(BorderFactory.createTitledBorder("Playing Area"));
+      pnlHumanHand.setBorder(BorderFactory.createTitledBorder("Your Hand"));
+      add(pnlComputerHand);
+      add(pnlPlayArea);
+      add(pnlHumanHand);
+
+   }
+
+   // Accessor for number of cards per hand
+   public int numCardsPerHand()
+   {
+      return numCardsPerHand;
+   }
+
+   // Accessor for number of players
+   public int numPlayers()
+   {
+      return numPlayers;
+   }
+}
+
+class GUICard
+{
+   static int NUM_CARD_VALUES = 14;
+   static int NUM_CARD_SUITS = 4;
+   static Icon[][] icon = new ImageIcon[NUM_CARD_VALUES][NUM_CARD_SUITS]; // 14 = A thru K + joker
+   private static Icon iconBack;
+   static boolean iconsLoaded = false;
+   public static char[] valueRanks = 
+      {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
+   
+   static void loadCardIcons()
+      {
+         String suit;
+         String cardValue;
+
+         // Builds the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
+         // and inserts them into the ImageIcon array.
+         for (int suitCount = 0; suitCount < 4; suitCount++)
+         {
+            suit = turnIntIntoCardSuit(suitCount);
+            for (int valueCount = 0; valueCount < 14; valueCount++)
+            {
+               cardValue = turnIntIntoCardValue(valueCount);
+               icon[valueCount][suitCount] = new ImageIcon(Assign5phase1
+                     .class.getResource("images/" + cardValue + suit + ".gif"));
+            }
+         }
+
+         // Adds the card-back image icon
+         iconBack = new ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
+      }
+   static public int valueAsInt(Card card)
+   {
+      return (int)card.getValue();
+   }
+   static public Icon getIcon(Card card)
+   {
+      return icon[valueAsInt(card)][suitAsInt(card)];   
+   }
+   static public int suitAsInt(Card card)
+   {
+      switch(card.getSuit())
+      {
+        case clubs:
+            return 0;
+        case diamonds:
+            return 1;
+        case hearts:
+            return 2;
+        case spades:
+            return 3;
+        default:
+            return 0;
+      }
+   }
+
+    
+   static public Icon getBackCardIcon()
+   {
+       return iconBack;   
+   }
+    
+   // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
+   static String turnIntIntoCardValue(int k)
+   {
+      String[] cardValue = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T",
+            "J", "Q", "K", "X"};
+      return cardValue[k];
+   }
+   // turns 0 - 3 into "C", "D", "H", "S"
+   static String turnIntIntoCardSuit(int j)
+   {
+      String[] suit = {"C", "D", "H", "S"};
+      return suit[j];
+   }
+   
+ 
 }
