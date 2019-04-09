@@ -799,20 +799,20 @@ class CardTable extends JFrame implements ActionListener {
 
    public double getCardAmount(Card card)
    {
-       double rank = (double)Card.getCardRank(card.getValue());
+      double rank = (double)Card.getCardRank(card.getValue());
 
-       switch (card.getSuit()) {
-        case clubs:
-           return rank + 0.1;
-        case diamonds:
-            return rank + 0.2;
-        case hearts:
-            return rank + 0.3;
-        case spades:
-            return rank + 0.4;
-        default:
-           return 0;
-        }
+      switch (card.getSuit()) {
+      case clubs:
+         return rank + 0.1;
+      case diamonds:
+         return rank + 0.2;
+      case hearts:
+         return rank + 0.3;
+      case spades:
+         return rank + 0.4;
+      default:
+         return 0;
+      }
    }
 
    // show everything to the user
