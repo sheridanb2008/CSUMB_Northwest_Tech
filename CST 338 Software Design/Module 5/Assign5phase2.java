@@ -17,10 +17,10 @@ public class Assign5phase2
 {
    static int NUM_CARDS_PER_HAND = 7;
    static int  NUM_PLAYERS = 2;
-//   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-//   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
-//   static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS];
-//   static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS];
+   //   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+   //   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+   //   static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS];
+   //   static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS];
 
    public static void main(String[] args)
    {
@@ -32,8 +32,8 @@ public class Assign5phase2
       myCardTable.setLocationRelativeTo(null);
       myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//      // show everything to the user
-//      myCardTable.setVisible(true);
+      //      // show everything to the user
+      //      myCardTable.setVisible(true);
 
       Deck deck1 = new Deck();
       deck1.shuffle();
@@ -767,9 +767,9 @@ class GUICard
    static Icon[][] icon = new 
          ImageIcon[NUM_CARD_VALUES][NUM_CARD_SUITS]; // 14 = A thru K + joker
    private static Icon iconBack;
-//   static boolean iconsLoaded = false;
-//   public static char[] valueRanks =
-//      {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
+   //   static boolean iconsLoaded = false;
+   //   public static char[] valueRanks =
+   //      {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
 
    // Stores to Card icons into a 2-D array.
    static void loadCardIcons()
