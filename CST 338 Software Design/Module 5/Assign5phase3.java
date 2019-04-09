@@ -107,17 +107,17 @@ public class Assign5phase3 implements ActionListener {
             }
             //Evaluate the move
             if (playerAmount > computerAmount)
-               {
-                  myCardTable.setResult("You Win");
-                  yourWinnings.add(yourCardIcon);
-                  yourWinnings.add(computerPlayedIcon);
-               }
-               else
-               {
-                  myCardTable.setResult("Computer Wins");
-                  computerWinnings.add(yourCardIcon);
-                  computerWinnings.add(computerPlayedIcon);
-               }
+            {
+               myCardTable.setResult("You Win");
+               yourWinnings.add(yourCardIcon);
+               yourWinnings.add(computerPlayedIcon);
+            }
+            else
+            {
+               myCardTable.setResult("Computer Wins");
+               computerWinnings.add(yourCardIcon);
+               computerWinnings.add(computerPlayedIcon);
+            }
          }
       }
 
