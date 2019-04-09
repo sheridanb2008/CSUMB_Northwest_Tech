@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Assign5phase1
 {
-   static final int NUM_CARD_IMAGES = 57; // 52 + 4 jokers + 1 back-of-card image
+   static final int NUM_CARD_IMAGES = 57; // 52 + 4 jokers + 1 back-of-card img
    static Icon[] icon = new ImageIcon[NUM_CARD_IMAGES];
 
    static void loadCardIcons()
@@ -31,15 +31,15 @@ public class Assign5phase1
          {
             cardValue = turnIntIntoCardValue(valueCount);
             icon[cardCount] = new
-               ImageIcon(Assign5phase1.class.getResource("images/" +
-               cardValue + suit + ".gif"));
+                  ImageIcon(Assign5phase1.class.getResource("images/" +
+                        cardValue + suit + ".gif"));
             cardCount++;
          }
       }
 
       // Adds the card-back image icon
       icon[cardCount] = new
-         ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
+            ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
    }
 
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
