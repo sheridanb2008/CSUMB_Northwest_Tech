@@ -2,8 +2,10 @@
  * Assignment: GUI Cards - Phase 2
  * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
  * Course:     CST338 - Spring B
- * Date:       04/??/2019
- * Objective:  x
+ * Date:       04/09/2019
+ * Objective:  Create a program with a separate CardTable class that extends
+ *             JFrame. This class will control the positioning of the panels and
+ *             cards of the GUI.
  */
 
 import java.awt.*;
@@ -15,33 +17,32 @@ public class Assign5phase2
 {
    static int NUM_CARDS_PER_HAND = 7;
    static int  NUM_PLAYERS = 2;
-   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];  
-   static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS]; 
-   static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS]; 
+//   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+//   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+//   static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS];
+//   static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS];
 
    public static void main(String[] args)
    {
       GUICard.loadCardIcons();
-      // establish main frame in which program will run
+      // Create main frame in which program will run.
       CardTable myCardTable 
       = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
-      myCardTable.setSize(800, 600);
+      myCardTable.setSize(800, 800);
       myCardTable.setLocationRelativeTo(null);
       myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      // show everything to the user
-      myCardTable.setVisible(true);
+//      // show everything to the user
+//      myCardTable.setVisible(true);
 
-
-      // and two random cards in the play region (simulating a computer/hum ply)
-      //code goes here ...
       Deck deck1 = new Deck();
       deck1.shuffle();
       Icon iconsComputer[] = new Icon[NUM_CARDS_PER_HAND];
       Icon iconsPlayer[] = new Icon[NUM_CARDS_PER_HAND];
       Hand computerHand = new Hand();
       Hand playerHand = new Hand();
+
+      // Loop deals the cards to the computer and player hands.
       for(int next = 0; next < NUM_CARDS_PER_HAND; next++)
       {
          computerHand.takeCard(deck1.dealCard());
@@ -49,10 +50,14 @@ public class Assign5phase2
          iconsComputer[next] = GUICard.getBackCardIcon();
          iconsPlayer[next] = GUICard.getIcon(playerHand.inspectCard(next));
       }
+      // Set the icons to be displayed for both the computer and player hands.
       myCardTable.setComputerHand(iconsComputer);
       myCardTable.setYourHand(iconsPlayer);
+
+      // Generate two random cards to be positioned in the play region.
       myCardTable.setYourCard(GUICard.getIcon(Card.generateRandomCard()));
       myCardTable.setComputerCard(GUICard.getIcon(Card.generateRandomCard()));
+
       // show everything to the user
       myCardTable.setVisible(true);
    }
@@ -82,7 +87,6 @@ class Card
       //constructor with all param
       set(value, suit);
       this.errorFlag = !isValid(value, suit);
-
    }
    // Default Card constructor
    public Card()
@@ -91,6 +95,7 @@ class Card
       value = 'A';
       suit = Card.Suit.spades;
    }
+
    // Objective: Return contents of card if the errorFlag equals false
    //      if error flag is true return illegal string.
    public String toString()
@@ -104,6 +109,7 @@ class Card
          return (value + " of " + suit);
       }
    }
+
    // Objective: sets the value of card if the input parameters are valid
    public boolean set(char value, Suit suit)
    {
@@ -121,6 +127,7 @@ class Card
          return false;
       }
    }
+
    // Accessor for card suit
    public Suit getSuit()
    {
@@ -153,6 +160,7 @@ class Card
          return false;
       }
    }
+
    // objective: checks for a valid card and returns true/false
    private boolean isValid(char value, Suit suit)
    {
@@ -361,7 +369,7 @@ class Hand
 
    /* Accessor for an individual card. If card position requested is
     *  greater than the number of cards a hand currently holds a card
-    *  with an errorFlage = true is returned.
+    *  with an errorFlag = true is returned.
     */
    public Card inspectCard(int k)
    {
@@ -637,10 +645,7 @@ class Deck
    }
 }
 
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
-
+// ****************** Class CardTable *****************
 class CardTable extends JFrame
 {
    private static final long serialVersionUID = 1L;
@@ -685,9 +690,6 @@ class CardTable extends JFrame
       pnlPlayArea.setVisible(true);
       pnlHumanHand.setVisible(true);
 
-
-
-
       computerCardIcon = 
             new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER );
       yourCardIcon =
@@ -703,7 +705,6 @@ class CardTable extends JFrame
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
-
    }
 
    public void setComputerHand(Icon[] icons)
@@ -745,7 +746,6 @@ class CardTable extends JFrame
       pnlPlayArea.repaint();
    }
 
-
    // Accessor for number of cards per hand
    public int numCardsPerHand()
    {
@@ -759,6 +759,7 @@ class CardTable extends JFrame
    }
 }
 
+// ******************* Class GUICard ******************
 class GUICard
 {
    static int NUM_CARD_VALUES = 14;
@@ -766,10 +767,11 @@ class GUICard
    static Icon[][] icon = new 
          ImageIcon[NUM_CARD_VALUES][NUM_CARD_SUITS]; // 14 = A thru K + joker
    private static Icon iconBack;
-   static boolean iconsLoaded = false;
-   public static char[] valueRanks = 
-      {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
+//   static boolean iconsLoaded = false;
+//   public static char[] valueRanks =
+//      {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
 
+   // Stores to Card icons into a 2-D array.
    static void loadCardIcons()
    {
       String suit;
@@ -791,14 +793,20 @@ class GUICard
       // Adds the card-back image icon
       iconBack = new ImageIcon(GUICard.class.getResource("images/BK.gif"));
    }
+
+   // Takes a Card object and returns the int rank value of the card.
    static public int valueAsInt(Card card)
    {
       return Card.getCardRank(card.getValue());
    }
+
+   // Takes a Card object from the client, and returns the Icon for that card.
    static public Icon getIcon(Card card)
    {
       return icon[valueAsInt(card)][suitAsInt(card)];   
    }
+
+   // Takes a Card object and returns the int value of the cards suit.
    static public int suitAsInt(Card card)
    {
       switch(card.getSuit())
@@ -816,6 +824,7 @@ class GUICard
       }
    }
 
+   // Returns the icon for the back-of-card
    static public Icon getBackCardIcon()
    {
       return iconBack;   
@@ -828,12 +837,11 @@ class GUICard
             "J", "Q", "K", "X"};
       return cardValue[k];
    }
+
    // turns 0 - 3 into "C", "D", "H", "S"
    static String turnIntIntoCardSuit(int j)
    {
       String[] suit = {"C", "D", "H", "S"};
       return suit[j];
    }
-
-
 }
