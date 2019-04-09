@@ -2,8 +2,9 @@
  * Assignment: GUI Cards - Phase 1
  * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
  * Course:     CST338 - Spring B
- * Date:       04/??/2019
- * Objective:
+ * Date:       04/09/2019
+ * Objective:  Create a program that will graphically display all 57 cards in a
+ *             deck, along with the back-of-card image.
  */
 
 import javax.swing.*;
@@ -29,13 +30,16 @@ public class Assign5phase1
          for (int valueCount = 0; valueCount < 14; valueCount++)
          {
             cardValue = turnIntIntoCardValue(valueCount);
-            icon[cardCount] = new ImageIcon(Assign5phase1.class.getResource("images/" + cardValue + suit + ".gif"));
+            icon[cardCount] = new
+               ImageIcon(Assign5phase1.class.getResource("images/" +
+               cardValue + suit + ".gif"));
             cardCount++;
          }
       }
 
       // Adds the card-back image icon
-      icon[cardCount] = new ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
+      icon[cardCount] = new
+         ImageIcon(Assign5phase1.class.getResource("images/BK.gif"));
    }
 
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
@@ -53,7 +57,6 @@ public class Assign5phase1
       return suit[j];
    }
 
-   // a simple main to throw all the JLabels out there for the world to see
    public static void main(String[] args)
    {
       int k;
@@ -84,4 +87,3 @@ public class Assign5phase1
       frmMyWindow.setVisible(true);
    }
 }
-
