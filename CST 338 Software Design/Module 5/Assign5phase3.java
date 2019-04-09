@@ -50,6 +50,11 @@ public class Assign5phase3 implements ActionListener {
       Hand yourHand = highCardGame.getHand(0);
       int numYourHand = yourHand.getNumCards();
 
+      /**
+       * MyButtonActionListener keeps track of the card ID for the button
+       * it's associated with. That way, one listener implementation can
+       * handle all of the card buttons.
+       */
       final class MyButtonActionListener implements ActionListener
       {
          public int cardNum;
@@ -60,12 +65,16 @@ public class Assign5phase3 implements ActionListener {
          public void actionPerformed(ActionEvent e) 
          {
             Hand yourHand = highCardGame.getHand(0);
+            Hand computerHand = highCardGame.getHand(1);
             int numYourHand = yourHand.getNumCards();
-            //Remove the played card from the human's hand.
+            int numComputerHand = computerHand.getNumCards();
+
+            //Check for an invalid card id
             if(cardNum >= numYourHand)
             {
                return;
             }
+            //Remove the played card from the human's hand.
             Card playedCard = yourHand.playCard(cardNum);
             //Update the playing area's card
             myCardTable.clearYourHand();
@@ -73,21 +82,22 @@ public class Assign5phase3 implements ActionListener {
             for (int i = 0; i < numYourHand; i++) 
             {
                Icon icon = GUICard.getIcon(yourHand.inspectCard(i));
+               // Create a listener for each card in the hand
                MyButtonActionListener listener = new MyButtonActionListener(i);
                myCardTable.addCardToYourHand(icon,listener);
             }
-            myCardTable.setYourCard(GUICard.getIcon(playedCard));
             Icon yourCardIcon = GUICard.getIcon(playedCard);
+            myCardTable.setYourCard(yourCardIcon);
             double playerAmount = myCardTable.getCardAmount(playedCard);
 
-            Hand computerHand = highCardGame.getHand(1);
-            int numComputerHand = computerHand.getNumCards();
             int randCard = randNum.nextInt(numComputerHand);
             Card computerPlayedCard = computerHand.playCard(randCard);
+            //Subtract the card we just played.
+            numComputerHand -= 1;
+            double computerAmount = 
+                  myCardTable.getCardAmount(computerPlayedCard);
             Icon computerPlayedIcon = GUICard.getIcon(computerPlayedCard);
-            double computerAmount = myCardTable.getCardAmount(computerPlayedCard);
             myCardTable.setComputerCard(computerPlayedIcon);
-            numComputerHand = computerHand.getNumCards();
 
             //Reset the computer hand to the right number of cards
             myCardTable.clearComputerHand();
@@ -96,29 +106,22 @@ public class Assign5phase3 implements ActionListener {
                myCardTable.addCardToComputerHand(GUICard.getBackCardIcon());
             }
             //Evaluate the move
-            boolean flag = true;
-            System.out.println("Your amount: " + playerAmount + " Computer Value: " + computerAmount);
-            while(flag != false)
-            {
-            	if (playerAmount > computerAmount)
-                {
-                   myCardTable.setResult("You Win");
-                   yourWinnings.add(yourCardIcon);
-                   yourWinnings.add(computerPlayedIcon);
-                   flag = false;
-                }
-                else
-                {
-                   myCardTable.setResult("Computer Wins");
-                   computerWinnings.add(yourCardIcon);
-                   computerWinnings.add(computerPlayedIcon);
-                   flag = false;
-                }
-            }
+            if (playerAmount > computerAmount)
+               {
+                  myCardTable.setResult("You Win");
+                  yourWinnings.add(yourCardIcon);
+                  yourWinnings.add(computerPlayedIcon);
+               }
+               else
+               {
+                  myCardTable.setResult("Computer Wins");
+                  computerWinnings.add(yourCardIcon);
+                  computerWinnings.add(computerPlayedIcon);
+               }
          }
       }
 
-      //Loads player hand
+      //Load the initial player hand
       for (int i = 0; i < numYourHand; i++) {
          Icon icon = GUICard.getIcon(yourHand.inspectCard(i));
          //Create an action listener for each card with the card id
@@ -129,11 +132,7 @@ public class Assign5phase3 implements ActionListener {
 
       Hand computerHand = highCardGame.getHand(1);
       int numComputerHand = computerHand.getNumCards();
-      //Loads computer hand
-      Icon[] icons = new Icon[numComputerHand];
-      for (int i = 0; i < numComputerHand; i++) {
-         icons[i] = GUICard.getIcon(computerHand.inspectCard(i));
-      }
+
       //Sets the computer hand to only show the back of the cards
       Icon[] back = new Icon[numComputerHand];
       for (int i =0; i < numComputerHand; i++) {
