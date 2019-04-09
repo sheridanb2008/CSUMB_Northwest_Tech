@@ -17,6 +17,8 @@ import javax.swing.*;
 public class Assign5phase3 implements ActionListener {
    static int NUM_CARDS_PER_HAND = 7;
    static int NUM_PLAYERS = 2;
+   static ArrayList<Icon> yourWinnings = new ArrayList<Icon>();
+   static ArrayList<Icon> computerWinnings = new ArrayList<Icon>();
    static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
    static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
    static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
@@ -96,17 +98,26 @@ public class Assign5phase3 implements ActionListener {
             //MORE CODE NEEDED BELOW:
 
             //Evaluate the move
-
-            if (playerAmount > computerAmount)
+            boolean flag = true;
+            System.out.println("Here");
+            while(flag != false)
             {
-               myCardTable.setResult("You Win");
-            }
-            else
-            {
-               myCardTable.setResult("Computer Wins");
-            }
+            	if (playerAmount > computerAmount)
+                {
+                   myCardTable.setResult("You Win");
+                   yourWinnings.add(yourCard);
+                   yourWinnings.add(computerPlayedIcon);
+                   flag = false;
+                }
+                else
+                {
+                   myCardTable.setResult("Computer Wins");
+                   computerWinnings.add(yourCard);
+                   computerWinnings.add(computerPlayedIcon);
+                   flag = false;
+             
             //Play the computer's move
-
+ 
             //If no more cards, finished
          }
       }
@@ -775,7 +786,7 @@ class CardTable extends JFrame implements ActionListener {
    }
 
    public void setResult(String status) {
-      results.setText(status);;
+      results.setText(status);
       Font bigger = new Font("TimesRoman",Font.BOLD,25);
       results.setFont(bigger);
       pnlPlayArea.repaint();
