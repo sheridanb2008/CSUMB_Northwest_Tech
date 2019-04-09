@@ -1,6 +1,6 @@
 
 /*
- * Assignment: GUI Cards - Phase 2
+ * Assignment: GUI Cards - Phase 3
  * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
  * Course:     CST338 - Spring B
  * Date:       04/??/2019
@@ -201,13 +201,18 @@ class Card {
     }
 
     // objective: Return a boolean if two cards are equal
-    public static boolean equals(Card card) {
-        Card newCard = new Card();
-        if (newCard.value == card.value && newCard.suit == card.suit) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean equals(Card card)
+    {
+       Card newCard = new Card();
+       if(newCard.value == card.value && newCard.suit == card.suit 
+             && newCard.errorFlag == card.errorFlag)
+       {
+          return true;
+       }
+       else
+       {
+          return false;
+       }
     }
 
     // objective: checks for a valid card and returns true/false
@@ -313,16 +318,21 @@ class Hand {
     }
 
     // adds a card to the next available position in the myCards array.
-    public boolean takeCard(Card card) {
-        Card newCard = copyCard(card);
-        for (int i = 0; i < myCards.length; i++)
-            if (myCards[i] == null) {
-                myCards[i] = newCard;
-                numCards++;
-                break;
-            }
+    public boolean takeCard(Card card)
+    {
+       boolean flag = false;
+       Card newCard = new Card();
+       newCard = this.copyCard(card);
+       for(int i = 0; i < myCards.length; i++)
+          if(myCards[i] == null)
+          {
+             myCards[i] = newCard;
+             numCards++;
+             flag = true;
+             break;
+          }
 
-        return true;
+       return flag;
     }
 
     // removes the card in the top occupied position of myCards array and
@@ -671,14 +681,15 @@ class CardTable extends JFrame implements ActionListener {
         pnlHumanHand.setVisible(true);
         
         
-        computerCardIcon = new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER);
-        yourCardIcon = new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER);
+        computerCardIcon = new JLabel("", JLabel.CENTER);
+        yourCardIcon = new JLabel("", JLabel.CENTER);
 
         JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
         
-        pnlPlayArea.add(yourCardIcon);
+        
         pnlPlayArea.add(computerCardIcon);
+        pnlPlayArea.add(yourCardIcon);
         
         pnlPlayArea.add(computerCardLabel);
         pnlPlayArea.add(yourCardLabel);
