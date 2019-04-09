@@ -10,6 +10,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import javax.swing.*;
@@ -76,16 +77,15 @@ public class Assign5phase3 implements ActionListener {
                myCardTable.addCardToYourHand(icon,listener);
             }
             myCardTable.setYourCard(GUICard.getIcon(playedCard));
-            Icon yourCard = GUICard.getIcon(playedCard);
-            int playerAmount = myCardTable.getCardAmount(yourCard);
-
+            Icon yourCardIcon = GUICard.getIcon(playedCard);
+            double playerAmount = myCardTable.getCardAmount(playedCard);
 
             Hand computerHand = highCardGame.getHand(1);
             int numComputerHand = computerHand.getNumCards();
             int randCard = randNum.nextInt(numComputerHand);
             Card computerPlayedCard = computerHand.playCard(randCard);
             Icon computerPlayedIcon = GUICard.getIcon(computerPlayedCard);
-            int computerAmount = myCardTable.getCardAmount(computerPlayedIcon);
+            double computerAmount = myCardTable.getCardAmount(computerPlayedCard);
             myCardTable.setComputerCard(computerPlayedIcon);
             numComputerHand = computerHand.getNumCards();
 
@@ -95,30 +95,26 @@ public class Assign5phase3 implements ActionListener {
             {
                myCardTable.addCardToComputerHand(GUICard.getBackCardIcon());
             }
-            //MORE CODE NEEDED BELOW:
-
             //Evaluate the move
             boolean flag = true;
-            System.out.println("Here");
+            System.out.println("Your amount: " + playerAmount + " Computer Value: " + computerAmount);
             while(flag != false)
             {
             	if (playerAmount > computerAmount)
                 {
                    myCardTable.setResult("You Win");
-                   yourWinnings.add(yourCard);
+                   yourWinnings.add(yourCardIcon);
                    yourWinnings.add(computerPlayedIcon);
                    flag = false;
                 }
                 else
                 {
                    myCardTable.setResult("Computer Wins");
-                   computerWinnings.add(yourCard);
+                   computerWinnings.add(yourCardIcon);
                    computerWinnings.add(computerPlayedIcon);
                    flag = false;
-             
-            //Play the computer's move
- 
-            //If no more cards, finished
+                }
+            }
          }
       }
 
@@ -801,59 +797,26 @@ class CardTable extends JFrame implements ActionListener {
    public int numPlayers() {
       return numPlayers;
    }
-   public int getCardAmount(Icon icon)
+
+   public double getCardAmount(Card card)
    {
-      int cardAmount = 0;
-      String out = icon.toString();
-      if(out.contains("AS") || out.contains("AC") || out.contains("AD") 
-            || out.contains("AH"))
-         cardAmount = 1;
-      else if(out.contains("2S") || out.contains("2C") || out.contains("2D") 
-            || out.contains("2H"))
-         cardAmount = 2;
-      else if(out.contains("3S") || out.contains("3C") || out.contains("3D") 
-            || out.contains("3H"))
-         cardAmount = 3;
-      else if(out.contains("4S") || out.contains("4C") || out.contains("4D") 
-            || out.contains("4H"))
-         cardAmount = 4;
-      else if(out.contains("5S") || out.contains("5C") || out.contains("5D") 
-            || out.contains("5H"))
-         cardAmount = 5;
-      else if(out.contains("6S") || out.contains("6C") || out.contains("6D") 
-            || out.contains("6H"))
-         cardAmount = 6;
-      else if(out.contains("7S") || out.contains("7C") || out.contains("7D") 
-            || out.contains("7H"))
-         cardAmount = 7;
-      else if(out.contains("8S") || out.contains("8C") || out.contains("8D") 
-            || out.contains("8H"))
-         cardAmount = 8;
-      else if(out.contains("9S") || out.contains("9C") || out.contains("9D") 
-            || out.contains("9H"))
-         cardAmount = 9;
-      else if(out.contains("TS") || out.contains("TC") || out.contains("TD") 
-            || out.contains("TH"))
-         cardAmount = 10;
-      else if(out.contains("JS") || out.contains("JC") || out.contains("JD") 
-            || out.contains("JH"))
-         cardAmount = 11;
-      else if(out.contains("QS") || out.contains("QC") || out.contains("QD") 
-            || out.contains("QH"))
-         cardAmount = 12;
-      else if(out.contains("KS") || out.contains("KC") || out.contains("KD") 
-            || out.contains("KH"))
-         cardAmount = 13;
-      else
-         cardAmount = 14;
-      return cardAmount;
+       double rank = (double)Card.getCardRank(card.getValue());
+
+       switch (card.getSuit()) {
+        case clubs:
+           return rank + 0.1;
+        case diamonds:
+            return rank + 0.2;
+        case hearts:
+            return rank + 0.3;
+        case spades:
+            return rank + 0.4;
+        default:
+           return 0;
+        }
    }
 
-
-
    // show everything to the user
-
-
    public void actionPerformed(ActionEvent e) 
    {
 
@@ -1092,3 +1055,5 @@ class CardGameFramework {
       return hand[playerIndex].takeCard(deck.dealCard());
    }
 }
+
+
