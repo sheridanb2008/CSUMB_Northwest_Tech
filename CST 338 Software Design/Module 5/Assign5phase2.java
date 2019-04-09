@@ -700,9 +700,9 @@ class CardTable extends JFrame
       pnlPlayArea.add(computerCardLabel);
       pnlPlayArea.add(yourCardLabel);
 
-      add(pnlComputerHand).setLocation(1,1);
-      add(pnlPlayArea).setLocation(2,1);
-      add(pnlHumanHand).setLocation(3,1);
+      add(pnlComputerHand);
+      add(pnlPlayArea);
+      add(pnlHumanHand);
 
    }
 
