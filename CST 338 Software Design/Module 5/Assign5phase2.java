@@ -19,10 +19,10 @@ public class Assign5phase2
    static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];  
    static JLabel[] playedCardLabels  = new JLabel[NUM_PLAYERS]; 
    static JLabel[] playLabelText  = new JLabel[NUM_PLAYERS]; 
+
    public static void main(String[] args)
    {
       GUICard.loadCardIcons();
-      //JFrame.setDefaultLookAndFeelDecorated(true);
       // establish main frame in which program will run
       CardTable myCardTable 
       = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
@@ -32,61 +32,31 @@ public class Assign5phase2
 
       // show everything to the user
       myCardTable.setVisible(true);
-     
-      /*
-      Icon[] testIcons = new Icon[5];
-      for(int i=0;i<5;i++)
-      {
-          testIcons[i] = GUICard.getBackCardIcon();
-      }
-      myCardTable.setComputerHand(testIcons);
-      myCardTable.setYourHand(testIcons);
-      //myCardTable.setYourCard(GUICard.getBackCardIcon());
-      //myCardTable.setComputerCard(GUICard.getBackCardIcon());
-      */
 
-      int numPacksPerDeck = 1;
-      int numJokersPerPack = 0;
-      int numUnusedCardsPerPack = 0;
-      Card[] unusedCardsPerPack = null;
-
-      CardGameFramework highCardGame = new CardGameFramework( 
-            numPacksPerDeck, numJokersPerPack,  
-            numUnusedCardsPerPack, unusedCardsPerPack, 
-            NUM_PLAYERS, NUM_CARDS_PER_HAND);
-      
-      highCardGame.deal();
-      Hand yourHand = highCardGame.getHand(0);
-      int numYourHand = yourHand.getNumCards();
-      Icon[] icons = new Icon[numYourHand];
-      for(int i=0;i<numYourHand;i++)
-      {
-          icons[i] = GUICard.getIcon(yourHand.inspectCard(i));
-      }
-      myCardTable.setYourHand(icons);
-
-      Hand computerHand = highCardGame.getHand(1);
-      int numComputerHand = computerHand.getNumCards();
-      icons = new Icon[numComputerHand];
-      for(int i=0;i<numComputerHand;i++)
-      {
-          icons[i] = GUICard.getIcon(computerHand.inspectCard(i));
-      }
-      myCardTable.setComputerHand(icons);
-      
-      // CREATE LABELS ----------------------------------------------------
-      //code goes here ...
-
-      // ADD LABELS TO PANELS -----------------------------------------
-      //code goes here ...
 
       // and two random cards in the play region (simulating a computer/hum ply)
       //code goes here ...
-
+      Deck deck1 = new Deck();
+      deck1.shuffle();
+      Icon iconsComputer[] = new Icon[NUM_CARDS_PER_HAND];
+      Icon iconsPlayer[] = new Icon[NUM_CARDS_PER_HAND];
+      Hand computerHand = new Hand();
+      Hand playerHand = new Hand();
+      for(int next = 0; next < NUM_CARDS_PER_HAND; next++)
+      {
+         computerHand.takeCard(deck1.dealCard());
+         playerHand.takeCard(deck1.dealCard());
+         iconsComputer[next] = GUICard.getBackCardIcon();
+         iconsPlayer[next] = GUICard.getIcon(playerHand.inspectCard(next));
+      }
+      myCardTable.setComputerHand(iconsComputer);
+      myCardTable.setYourHand(iconsPlayer);
+      myCardTable.setYourCard(GUICard.getIcon(Card.generateRandomCard()));
+      myCardTable.setComputerCard(GUICard.getIcon(Card.generateRandomCard()));
       // show everything to the user
       myCardTable.setVisible(true);
-
    }
+
 }
 
 // ******************** Card Class ********************
@@ -173,7 +143,8 @@ class Card
    public static boolean equals(Card card)
    {
       Card newCard = new Card();
-      if(newCard.value == card.value && newCard.suit == card.suit)
+      if(newCard.value == card.value && newCard.suit == card.suit 
+            && newCard.errorFlag == card.errorFlag)
       {
          return true;
       }
@@ -305,16 +276,19 @@ class Hand
    // adds a card to the next available position in the myCards array.
    public boolean takeCard(Card card)
    {
-      Card newCard = copyCard(card);
+      boolean flag = false;
+      Card newCard = new Card();
+      newCard = this.copyCard(card);
       for(int i = 0; i < myCards.length; i++)
          if(myCards[i] == null)
          {
             myCards[i] = newCard;
             numCards++;
+            flag = true;
             break;
          }
 
-      return true;
+      return flag;
    }
 
    // removes the card in the top occupied position of myCards array and
@@ -328,17 +302,17 @@ class Hand
       }
       //Decreases numCards.
       Card card = myCards[cardIndex];
-      
+
       numCards--;
       for(int i = cardIndex; i < numCards; i++)
       {
          myCards[i] = myCards[i+1];
       }
-      
+
       myCards[numCards] = null;
-      
+
       return card;
-    }
+   }
 
    // Wraps toString() output into multiple lines.
    private String textWrap(String text)
@@ -407,7 +381,7 @@ class Hand
 
    public void sort()
    {
-       sort(myCards,myCards.length);
+      sort(myCards,myCards.length);
    }
 
    public void sort(Card[] cards, int arraySize)
@@ -572,17 +546,17 @@ class Deck
       {
          switch(next / 14)
          {
-            case 0:
-               suitValue =  Card.Suit.spades;
-               break;
-            case 1:
-               suitValue = Card.Suit.hearts;
-               break;
-            case 2:
-               suitValue =  Card.Suit.diamonds;
-               break;
-            default:
-               suitValue =  Card.Suit.clubs;
+         case 0:
+            suitValue =  Card.Suit.spades;
+            break;
+         case 1:
+            suitValue = Card.Suit.hearts;
+            break;
+         case 2:
+            suitValue =  Card.Suit.diamonds;
+            break;
+         default:
+            suitValue =  Card.Suit.clubs;
          }
          // Input into the correct position in masterPack
          masterPack[next] = new Card(value[next - (14 * (next/14))],suitValue);
@@ -600,7 +574,7 @@ class Deck
       for(int i = topCard; i < cards.length; i++)
       {
          if (cards[i].getSuit() == card.getSuit() && cards[i].getValue() ==
-            card.getValue())
+               card.getValue())
          {
             // False is returned if there are too many instances of the card.
             return false;
@@ -612,8 +586,8 @@ class Deck
       return true;
    }
 
-   // Removes a specific card from the deck and places the current top card into
-   // its place.
+   // Removes a specific card from the deck and places the current top card
+   // into its place.
    public boolean removeCard(Card card)
    {
       // Get the position value of the top card.
@@ -623,7 +597,7 @@ class Deck
       for(int i = topCard; i < cards.length; i++)
       {
          if (cards[i].getSuit() == card.getSuit() && cards[i].getValue() ==
-            card.getValue())
+               card.getValue())
          {
             // Copy the top card into the removed cards position. Set top card
             // position to null.
@@ -694,8 +668,9 @@ class CardTable extends JFrame
 
       setLayout(layoutManager);
       pnlComputerHand = new JPanel(handLayoutManager);
-      pnlHumanHand = new JPanel(handLayoutManager);
       pnlPlayArea = new JPanel(cardLayoutManager);
+      pnlHumanHand = new JPanel(handLayoutManager);
+
 
       this.numCardsPerHand = Math.min(numCardsPerHand, MAX_CARDS_PER_HAND);
       this.numPlayers = Math.min(numPlayers, MAX_PLAYERS);
@@ -704,69 +679,70 @@ class CardTable extends JFrame
       // Set panels
       pnlComputerHand.setBorder(BorderFactory
             .createTitledBorder("Computer Hand"));
-      pnlHumanHand.setBorder(BorderFactory.createTitledBorder("Playing Area"));
-      pnlPlayArea.setBorder(BorderFactory.createTitledBorder("Your Hand"));
+      pnlPlayArea.setBorder(BorderFactory.createTitledBorder("Playing Area"));
+      pnlHumanHand.setBorder(BorderFactory.createTitledBorder("Your Hand"));
       pnlComputerHand.setVisible(true);
-      pnlHumanHand.setVisible(true);
       pnlPlayArea.setVisible(true);
-      
-      
-      
+      pnlHumanHand.setVisible(true);
+
+
+
+
       computerCardIcon = 
             new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER );
       yourCardIcon =
             new JLabel(GUICard.getBackCardIcon(), JLabel.CENTER );
-      
+
       JLabel computerCardLabel = new JLabel( "Computer", JLabel.CENTER );
       JLabel yourCardLabel = new JLabel( "You", JLabel.CENTER );
       pnlPlayArea.add(computerCardIcon);
       pnlPlayArea.add(yourCardIcon);
       pnlPlayArea.add(computerCardLabel);
       pnlPlayArea.add(yourCardLabel);
-      
-      add(pnlComputerHand);
-      add(pnlPlayArea);
-      add(pnlHumanHand);
+
+      add(pnlComputerHand).setLocation(1,1);
+      add(pnlPlayArea).setLocation(2,1);
+      add(pnlHumanHand).setLocation(3,1);
 
    }
 
    public void setComputerHand(Icon[] icons)
    {
-        pnlComputerHand.removeAll();
+      pnlComputerHand.removeAll();
 
-        for(int i=0;i<icons.length;i++)
-        {
-            pnlComputerHand.add(new JLabel(icons[i]));
-        }
-        pnlComputerHand.revalidate();
-        pnlComputerHand.repaint();
-        revalidate();
-        repaint();
+      for(int i=0;i<icons.length;i++)
+      {
+         pnlComputerHand.add(new JLabel(icons[i]));
+      }
+      pnlComputerHand.revalidate();
+      pnlComputerHand.repaint();
+      revalidate();
+      repaint();
    }
 
    public void setYourHand(Icon[] icons)
    {
-        pnlHumanHand.removeAll();
-        for(int i=0;i<icons.length;i++)
-        {
-            pnlHumanHand.add(new JLabel(icons[i]));
-        }
-        pnlHumanHand.revalidate();
-        pnlHumanHand.repaint();
+      pnlHumanHand.removeAll();
+      for(int i=0;i<icons.length;i++)
+      {
+         pnlHumanHand.add(new JLabel(icons[i]));
+      }
+      pnlHumanHand.revalidate();
+      pnlHumanHand.repaint();
    }
-    
+
    public void setComputerCard(Icon icon)
    {
-       computerCardIcon.setIcon(icon);
-       pnlPlayArea.revalidate();
-       pnlPlayArea.repaint();
+      computerCardIcon.setIcon(icon);
+      pnlPlayArea.revalidate();
+      pnlPlayArea.repaint();
    }
-    
+
    public void setYourCard(Icon icon)
    {
-       yourCardIcon.setIcon(icon);
-       pnlPlayArea.revalidate();
-       pnlPlayArea.repaint();
+      yourCardIcon.setIcon(icon);
+      pnlPlayArea.revalidate();
+      pnlPlayArea.repaint();
    }
 
 
@@ -787,33 +763,34 @@ class GUICard
 {
    static int NUM_CARD_VALUES = 14;
    static int NUM_CARD_SUITS = 4;
-   static Icon[][] icon = new ImageIcon[NUM_CARD_VALUES][NUM_CARD_SUITS]; // 14 = A thru K + joker
+   static Icon[][] icon = new 
+         ImageIcon[NUM_CARD_VALUES][NUM_CARD_SUITS]; // 14 = A thru K + joker
    private static Icon iconBack;
    static boolean iconsLoaded = false;
    public static char[] valueRanks = 
       {'2','3','4','5','6','7','8','9','J','Q','K','A','X'};
-   
+
    static void loadCardIcons()
+   {
+      String suit;
+      String cardValue;
+
+      // Builds the file names("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
+      // and inserts them into the ImageIcon array.
+      for (int suitCount = 0; suitCount < 4; suitCount++)
       {
-         String suit;
-         String cardValue;
-
-         // Builds the file names ("AC.gif", "2C.gif", "3C.gif", "TC.gif", etc.)
-         // and inserts them into the ImageIcon array.
-         for (int suitCount = 0; suitCount < 4; suitCount++)
+         suit = turnIntIntoCardSuit(suitCount);
+         for (int valueCount = 0; valueCount < 14; valueCount++)
          {
-            suit = turnIntIntoCardSuit(suitCount);
-            for (int valueCount = 0; valueCount < 14; valueCount++)
-            {
-               cardValue = turnIntIntoCardValue(valueCount);
-               icon[valueCount][suitCount] = new ImageIcon(GUICard
-                     .class.getResource("images/" + cardValue + suit + ".gif"));
-            }
+            cardValue = turnIntIntoCardValue(valueCount);
+            icon[valueCount][suitCount] = new ImageIcon(GUICard.class.
+                  getResource("images/" + cardValue + suit + ".gif"));
          }
-
-         // Adds the card-back image icon
-         iconBack = new ImageIcon(GUICard.class.getResource("images/BK.gif"));
       }
+
+      // Adds the card-back image icon
+      iconBack = new ImageIcon(GUICard.class.getResource("images/BK.gif"));
+   }
    static public int valueAsInt(Card card)
    {
       return Card.getCardRank(card.getValue());
@@ -826,24 +803,24 @@ class GUICard
    {
       switch(card.getSuit())
       {
-        case clubs:
-            return 0;
-        case diamonds:
-            return 1;
-        case hearts:
-            return 2;
-        case spades:
-            return 3;
-        default:
-            return 0;
+      case clubs:
+         return 0;
+      case diamonds:
+         return 1;
+      case hearts:
+         return 2;
+      case spades:
+         return 3;
+      default:
+         return 0;
       }
    }
 
    static public Icon getBackCardIcon()
    {
-       return iconBack;   
+      return iconBack;   
    }
-    
+
    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
    static String turnIntIntoCardValue(int k)
    {
@@ -857,6 +834,6 @@ class GUICard
       String[] suit = {"C", "D", "H", "S"};
       return suit[j];
    }
-   
- 
+
+
 }
