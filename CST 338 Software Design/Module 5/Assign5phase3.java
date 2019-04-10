@@ -1165,5 +1165,3 @@ class CardGameFramework
       return hand[playerIndex].takeCard(deck.dealCard());
    }
 }
-
-
