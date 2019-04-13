@@ -1,0 +1,73 @@
+
+/*
+ * Assignment: Timed High-Card Game
+ * Names:      Brian Sheridan, Craig Calvert, Kevin Bentley, Samuel Pearce
+ * Course:     CST338 - Spring B
+ * Date:       04/??/2019
+ * Objective:  
+ */
+
+
+
+//----------------------------------------------------------------------
+//                          --- CONTROLLER ---
+//----------------------------------------------------------------------
+
+public class Assign6 implements ActionListener 
+{
+   static int NUM_CARDS_PER_HAND = 7;
+   static int NUM_PLAYERS = 2;
+   static ArrayList<Icon> yourWinnings = new ArrayList<Icon>();
+   static ArrayList<Icon> computerWinnings = new ArrayList<Icon>();
+   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+   static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
+   static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
+
+   public static void main(String[] args)  
+   {
+      int numPacksPerDeck = 1;
+      int numJokersPerPack = 0;
+      int numUnusedCardsPerPack = 0;
+      Card[] unusedCardsPerPack = null;
+      CardGameFramework highCardGame;
+      CardTable myCardTable;
+      Random randNum = new Random();
+      ------------------ GUICard.loadCardIcons();
+      // establish main frame in which program will run
+      myCardTable = new CardTable("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+      ------------------ myCardTable.setSize(800, 800);
+      ------------------ myCardTable.setLocationRelativeTo(null);
+      ------------------ myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      // show everything to the user
+      myCardTable.setVisible(true);
+      highCardGame = new CardGameFramework(numPacksPerDeck, numJokersPerPack,
+            numUnusedCardsPerPack, unusedCardsPerPack, 
+            NUM_PLAYERS, NUM_CARDS_PER_HAND);
+      highCardGame.deal();
+      Hand yourHand = highCardGame.getHand(0);
+      int numYourHand = yourHand.getNumCards();
+
+      
+
+      //Load the initial player hand
+      for (int i = 0; i < numYourHand; i++) 
+      {
+         Icon icon = GUICard.getIcon(yourHand.inspectCard(i));
+         //Create an action listener for each card with the card id
+         //so when it's clicked, we know which one it was
+         MyButtonActionListener listener = new MyButtonActionListener(i);
+         myCardTable.addCardToYourHand(icon,listener);
+      }
+
+      Hand computerHand = highCardGame.getHand(1);
+      int numComputerHand = computerHand.getNumCards();
+
+      myCardTable.setComputerHand(back);
+      myCardTable.setVisible(true);
+   }
+
+   public void actionPerformed(ActionEvent e) {}
+}
+
