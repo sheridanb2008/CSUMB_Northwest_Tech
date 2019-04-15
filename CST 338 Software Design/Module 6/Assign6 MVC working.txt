@@ -767,6 +767,7 @@ class GameView extends JFrame implements ActionListener
    private JLabel yourCardIcon;
    private JLabel results;
    private static JLabel secTimer;
+   GameController.Packer timerThread;
 
    // GameView constructor
    GameView(String title, int numCardsPerHand, int numPlayers)
@@ -804,12 +805,12 @@ class GameView extends JFrame implements ActionListener
       computerCardIcon = new JLabel("", JLabel.CENTER);
       yourCardIcon = new JLabel("", JLabel.CENTER);
 
-      JLabel secTimer = new JLabel("", JLabel.CENTER);
+      secTimer = new JLabel("", JLabel.CENTER);
       JLabel placeHolder1 = new JLabel("", JLabel.CENTER);
       JButton timerButton = new JButton("Start"); 
       JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
       JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
-      ActionListenerTimer(timerButton);
+      
 
       pnlPlayArea.add(results);
       pnlPlayArea.add(computerCardIcon);
@@ -824,15 +825,36 @@ class GameView extends JFrame implements ActionListener
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
+      timerButton.addActionListener(new ActionListener()
+      {
+         int clickCount = 0;
+         GameController.Packer timerThread = new GameController.Packer();
+//         @SuppressWarnings("deprecation")
+         public void actionPerformed(ActionEvent e)
+         {     
+            clickCount++;
+            if(clickCount%2 == 1 && clickCount < 2) 
+            {
+               timerThread.start();   
+            }
+            else if (clickCount%2 == 0)
+            {
+             timerThread.suspended();  
+//               timerThread.suspend();
+            }
+            else if(clickCount%2 == 1 && clickCount > 2)
+            {
+            timerThread.resumeThread();
+//               timerThread.resume();
+            }
+         }
+      });
+  
 
    }
    
-   private void ActionListenerTimer(JButton timerButton) 
-   {
-      GameController.Packer timerThread = new GameController.Packer();
-      timerThread.start();
-      
-   }
+   
+
 
    public void setComputerHand(Icon[] icons)
    {
@@ -1055,30 +1077,7 @@ class GameController
       }
 
    }
-   public static class Packer extends Thread
-   {
-      private int seconds;
-      public void run()
-      {
-         seconds += 1;
-         String count = seconds + " Seconds";
-         GameView.setTimer(count);
-         pause(1000);
-      }
-      
-      public void pause(int milliseconds)
-      {
-         try
-         {
-            Thread.sleep(milliseconds);
-         }
-         catch(InterruptedException e)
-         {
-            System.out.println("Unexpected Interrupt");
-            System.exit(0);
-         }
-      }
-   }
+
 
    // ******************** class CardGameFramework *****************************
 
@@ -1254,7 +1253,59 @@ class GameController
          return hand[playerIndex].takeCard(deck.dealCard());
       }
    }
+   
+// ---------------------- Thread   
+   public static class Packer extends Thread
+   {
+      private int seconds = 0;
+      public boolean suspended = false;
+      public void run()
+      {
+              
+         try
+         {
+            for(int i = 0; i < i + 1; i++)
+            {
+               seconds += 1;
+               String count = seconds + " Seconds";
+               GameView.setTimer(count);
+               pause(1000);
+               synchronized (this) 
+               {
+                  while(suspended) {
+                     this.wait(10);
+                  }
 
+               } 
+                
+            }
+         }catch (InterruptedException e) {}
+      }
+      public void suspended()
+      {
+         suspended = true;
+      }
+      
+      public void resumeThread()
+      {
+         suspended = false;
+         
+      }
+      
+      
+      public void pause(int milliseconds)
+      {
+         try
+         {
+            Thread.sleep(milliseconds);
+         }
+         catch(InterruptedException e)
+         {
+            System.out.println("Unexpected Interrupt");
+            System.exit(0);
+         }
+      }
+   }
    /*
     * MyButtonActionListener keeps track of the card ID for the button
     * it's associated with. That way, one listener implementation can
