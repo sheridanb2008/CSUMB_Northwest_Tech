@@ -43,7 +43,9 @@ public class Assign6
 
       // show everything to the user
       myCardTable.setVisible(true);
-      highCardGame = new GameController.CardGameFramework(numPacksPerDeck, numJokersPerPack, numUnusedCardsPerPack, unusedCardsPerPack, NUM_PLAYERS, NUM_CARDS_PER_HAND);
+      highCardGame = new GameController.CardGameFramework(numPacksPerDeck,
+            numJokersPerPack, numUnusedCardsPerPack, unusedCardsPerPack,
+            NUM_PLAYERS, NUM_CARDS_PER_HAND);
       highCardGame.deal();
       GameModel.Hand yourHand = highCardGame.getHand(0);
       int numYourHand = yourHand.getNumCards();
@@ -72,50 +74,37 @@ public class Assign6
             {
                return;
             }
-            //Remove the played card from the human's hand.
+
+            // Play a card from the human's hand.
             GameModel.Card playedCard = yourHand.playCard(cardNum);
+            yourHand.takeCard(highCardGame.getCardFromDeck());
+
             //Update the playing area's card
             myCardTable.clearYourHand();
             numYourHand = yourHand.getNumCards();
-            for (int i = 0; i < numYourHand; i++) 
+            for (int i = 0; i < numYourHand - 1; i++)
             {
                Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
+
                // Create a listener for each card in the hand
                MyButtonActionListener listener = new MyButtonActionListener(i);
                myCardTable.addCardToYourHand(icon,listener);
             }
+
             Icon yourCardIcon = GameView.GUICard.getIcon(playedCard);
             myCardTable.setYourCard(yourCardIcon);
-            double playerAmount = myCardTable.getCardAmount(playedCard);
 
-            int randCard = randNum.nextInt(numComputerHand);
-            GameModel.Card computerPlayedCard = computerHand.playCard(randCard);
-            //Subtract the card we just played.
-            numComputerHand -= 1;
-            double computerAmount = 
-                  myCardTable.getCardAmount(computerPlayedCard);
+            // Play a card from the computer's hand.
+            GameModel.Card computerPlayedCard = computerHand.playCard(cardNum);
+            computerHand.takeCard(highCardGame.getCardFromDeck());
+
+            //Update the playing area's card
             Icon computerPlayedIcon = GameView.GUICard.getIcon(computerPlayedCard);
             myCardTable.setComputerCard(computerPlayedIcon);
 
-            //Reset the computer hand to the right number of cards
-            myCardTable.clearComputerHand();
-            for (int i = 0; i < numComputerHand; i++) 
-            {
-               myCardTable.addCardToComputerHand(GameView.GUICard.getBackCardIcon());
-            }
-            //Evaluate the move
-            if (playerAmount > computerAmount)
-            {
-               myCardTable.setResult("You Win");
-               yourWinnings.add(yourCardIcon);
-               yourWinnings.add(computerPlayedIcon);
-            }
-            else
-            {
-               myCardTable.setResult("Computer Wins");
-               computerWinnings.add(yourCardIcon);
-               computerWinnings.add(computerPlayedIcon);
-            }
+            // Check how many cards are still in the deck.
+            
+
          }
          
       }
@@ -147,8 +136,6 @@ public class Assign6
    public void actionPerformedTimer(ActionEvent e) {}
 
 }
-   
-
 
 //------------------------------------------------------------------------------
 //                          --- MODEL ---
@@ -401,16 +388,27 @@ class GameModel
             // Creates a card that does not work
             return new Card('M', Card.Suit.spades);
          }
-         // Decreases numCards.
-         Card card = myCards[cardIndex];
+         // Card selected to play.
+          Card card = myCards[cardIndex];
 
-         numCards--;
-         for (int i = cardIndex; i < numCards; i++)
+          //numCards--;
+//         for (int i = cardIndex; i < numCards; i++)
+//         {
+//            myCards[i] = myCards[i + 1];
+//         }
+//
+//         myCards[numCards] = null;
+
+         // Remove the played card and slide all of the cards down one spot in
+         // the myCards array.
+         for (int i = cardIndex; i < numCards - 1; i++)
          {
             myCards[i] = myCards[i + 1];
          }
 
-         myCards[numCards] = null;
+         // Clear the last value in myCards.
+         myCards[numCards - 1] = null;
+         numCards--;
 
          return card;
       }
@@ -835,8 +833,6 @@ class GameView extends JFrame implements ActionListener
       timerThread.start();
       
    }
-
-
 
    public void setComputerHand(Icon[] icons)
    {
