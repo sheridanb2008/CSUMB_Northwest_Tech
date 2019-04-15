@@ -144,11 +144,8 @@ public class Assign6
       myCardTable.setVisible(true);
    }
 
-   public void actionPerformedTimer(ActionEvent e) 
-   {
-      GameController.Packer timerThread = new GameController.Packer();
-      timerThread.start();
-   }
+   public void actionPerformedTimer(ActionEvent e) {}
+
 }
    
 
@@ -809,11 +806,12 @@ class GameView extends JFrame implements ActionListener
       computerCardIcon = new JLabel("", JLabel.CENTER);
       yourCardIcon = new JLabel("", JLabel.CENTER);
 
-      JLabel secTimer = new JLabel("timer", JLabel.CENTER);
+      JLabel secTimer = new JLabel("", JLabel.CENTER);
       JLabel placeHolder1 = new JLabel("", JLabel.CENTER);
-      JButton timerButton = new JButton("Start");
+      JButton timerButton = new JButton("Start"); 
       JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
       JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
+      ActionListenerTimer(timerButton);
 
       pnlPlayArea.add(results);
       pnlPlayArea.add(computerCardIcon);
@@ -830,6 +828,16 @@ class GameView extends JFrame implements ActionListener
       add(pnlHumanHand);
 
    }
+   
+   private void ActionListenerTimer(JButton timerButton) 
+   {
+      GameController.Packer timerThread = new GameController.Packer();
+      timerThread.start();
+      
+   }
+
+
+
    public void setComputerHand(Icon[] icons)
    {
       pnlComputerHand.removeAll();
