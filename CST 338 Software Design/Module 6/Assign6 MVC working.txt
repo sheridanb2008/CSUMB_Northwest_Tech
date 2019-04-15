@@ -117,6 +117,7 @@ public class Assign6
                computerWinnings.add(computerPlayedIcon);
             }
          }
+         
       }
 
       //Load the initial player hand
@@ -138,11 +139,16 @@ public class Assign6
       {
          back[i] = GameView.GUICard.getBackCardIcon();
       }
+      
       myCardTable.setComputerHand(back);
       myCardTable.setVisible(true);
    }
 
-   public void actionPerformed(ActionEvent e) {}
+   public void actionPerformedTimer(ActionEvent e) 
+   {
+      GameController.Packer timerThread = new GameController.Packer();
+      timerThread.start();
+   }
 }
    
 
@@ -759,12 +765,13 @@ class GameView extends JFrame implements ActionListener
    // and establishes layouts according to the general description below.
    public JPanel pnlComputerHand;
    public JPanel pnlHumanHand;
-   public JPanel pnlPlayArea;
+   public static JPanel pnlPlayArea;
    public JLabel win = new JLabel("You Win");
    public JLabel lose = new JLabel("You Lose");
    private JLabel computerCardIcon;
    private JLabel yourCardIcon;
    private JLabel results;
+   private static JLabel secTimer;
 
    // GameView constructor
    GameView(String title, int numCardsPerHand, int numPlayers)
@@ -802,32 +809,27 @@ class GameView extends JFrame implements ActionListener
       computerCardIcon = new JLabel("", JLabel.CENTER);
       yourCardIcon = new JLabel("", JLabel.CENTER);
 
-      JLabel placeHolder = new JLabel("", JLabel.CENTER);
+      JLabel secTimer = new JLabel("timer", JLabel.CENTER);
+      JLabel placeHolder1 = new JLabel("", JLabel.CENTER);
+      JButton timerButton = new JButton("Start");
       JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
       JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
 
-      pnlPlayArea.add(computerCardIcon);
       pnlPlayArea.add(results);
+      pnlPlayArea.add(computerCardIcon);
+      pnlPlayArea.add(secTimer);  
+      
       pnlPlayArea.add(yourCardIcon);
-
+      pnlPlayArea.add(placeHolder1);
       pnlPlayArea.add(computerCardLabel);
-      pnlPlayArea.add(placeHolder);
+      pnlPlayArea.add(timerButton);
       pnlPlayArea.add(yourCardLabel);
 
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
 
-      //Sets the computer hand to only show the back of the cards
-      
-//      Icon[] back = new Icon[56];
-//      for (int i =0; i < GameController.numComputerHand; i++)
-//      {
-//         back[i] = GUICard.getBackCardIcon();
-//      }
-//      setComputerHand(back);
    }
-
    public void setComputerHand(Icon[] icons)
    {
       pnlComputerHand.removeAll();
@@ -891,6 +893,14 @@ class GameView extends JFrame implements ActionListener
       results.setText(status);
       Font bigger = new Font("TimesRoman",Font.BOLD,25);
       results.setFont(bigger);
+      pnlPlayArea.repaint();
+   }
+   
+   public static void setTimer(String time)
+   {
+      secTimer.setText(time);
+      Font bigger = new Font("TimesRoman",Font.BOLD,18);
+      secTimer.setFont(bigger);
       pnlPlayArea.repaint();
    }
 
@@ -1040,8 +1050,30 @@ class GameController
          myCardTable.addCardToYourHand(icon,listener);
       }
 
-//      GameModel.Hand computerHand = highCardGame.getHand(1);
-//      int numComputerHand = computerHand.getNumCards();
+   }
+   public static class Packer extends Thread
+   {
+      private int seconds;
+      public void run()
+      {
+         seconds += 1;
+         String count = seconds + " Seconds";
+         GameView.setTimer(count);
+         pause(1000);
+      }
+      
+      public void pause(int milliseconds)
+      {
+         try
+         {
+            Thread.sleep(milliseconds);
+         }
+         catch(InterruptedException e)
+         {
+            System.out.println("Unexpected Interrupt");
+            System.exit(0);
+         }
+      }
    }
 
    // ******************** class CardGameFramework *****************************
