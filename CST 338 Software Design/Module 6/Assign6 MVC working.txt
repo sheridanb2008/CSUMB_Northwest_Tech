@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
 import javax.swing.*;
 
 
-public class Assign6
+class Assign6
 {
    static int NUM_CARDS_PER_HAND = 7;
    static int NUM_PLAYERS = 2;
@@ -52,8 +53,9 @@ public class Assign6
       int numYourHand = yourHand.getNumCards();
 
       // Deal two cards into the play area.
-      GameModel.Card playArea1 = highCardGame.getCardFromDeck();
-      GameModel.Card playArea2 = highCardGame.getCardFromDeck();
+      myCardTable.setPlayCard1(highCardGame.getCardFromDeck());
+      myCardTable.setPlayCard2(highCardGame.getCardFromDeck());
+
 
       /**
        * MyButtonActionListener keeps track of the card ID for the button
@@ -67,90 +69,119 @@ public class Assign6
          {
             this.cardNum = id;
          }
+
+         private boolean canPlayCard(GameModel.Card stack, GameModel.Card cardToPlay)
+         {
+            int stackRank = GameModel.Card.getCardRank(stack.getValue());
+            int cardRank = GameModel.Card.getCardRank(cardToPlay.getValue());
+            if(Math.abs(stackRank - cardRank) == 1)
+            {
+                return true;
+            }
+            return false;
+         }
+
          public void actionPerformed(ActionEvent e) 
          {
             GameModel.Hand yourHand = highCardGame.getHand(0);
             GameModel.Hand computerHand = highCardGame.getHand(1);
             int numYourHand = yourHand.getNumCards();
-            int numComputerHand = computerHand.getNumCards();
-            int youNoPlay = 0;
-            int computerNoPlay = 0;
-
-
-
-            GameModel.Card playedCard;
-            GameModel.Card computerPlayedCard = playArea2;
+            boolean computerPlayed = false;
+            boolean youPlayed = false;
 
             //Check for an invalid card id
             if(cardNum >= numYourHand)
             {
                return;
             }
-
-            // Play a card from the human's hand.
-            playedCard = yourHand.playCard(cardNum);
-            yourHand.takeCard(highCardGame.getCardFromDeck());
-
-            //Update the playing area's card
-            myCardTable.clearYourHand();
-            numYourHand = yourHand.getNumCards();
-            for (int i = 0; i < numYourHand; i++)
+            if(cardNum!=-1)
             {
-               Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
+               // Play a card from the human's hand.
+               GameModel.Card triedCard = yourHand.inspectCard(cardNum);
 
-               // Create a listener for each card in the hand
-               MyButtonActionListener listener = new MyButtonActionListener(i);
-               myCardTable.addCardToYourHand(icon,listener);
-            }
-
-            Icon yourCardIcon = GameView.GUICard.getIcon(playedCard);
-            myCardTable.setYourCard(yourCardIcon);
-
-            // Play a card from the computer's hand.
-
-            for (int i = 0; i < computerHand.getNumCards(); i++) //<----------SORRY, KEVIN. THIS IS MESSED UP ... NEEDS WORK!!!!
-            {
-               // Get the rank of the card in the computerHand
-               int computerRank = computerHand.inspectCard(i).getCardRank(computerHand.inspectCard(i).getValue());
-
-               // Get the rank of the card in the computer's play area.
-               int playAreaRank = computerPlayedCard.getCardRank(computerPlayedCard.getValue());
-
-               // Check if computer has a card to play that is +1 or -1 in value
-               // from the card in the computer's play area. If the computer
-               // can't play a card increase computerNoPlay by +1 and draw
-               // another card from the deck.
-               if (computerRank == (playAreaRank - 1) || computerRank == (playAreaRank + 1))
+               if(canPlayCard(myCardTable.playCard1,triedCard))
                {
-                  computerPlayedCard = computerHand.playCard(cardNum);
-                  computerHand.takeCard(highCardGame.getCardFromDeck());
-                  break;
-               }
-               else if (i == computerHand.getNumCards())
+                     myCardTable.setPlayCard1(triedCard);
+                     yourHand.playCard(cardNum);
+                     yourHand.takeCard(highCardGame.getCardFromDeck());
+                     System.out.println("You played a " + triedCard.toString());
+                     youPlayed = true;
+                }
+               else if(canPlayCard(myCardTable.playCard2,triedCard))
                {
-                  computerNoPlay++;
-                  break;
+                     myCardTable.setPlayCard2(triedCard);
+                     yourHand.playCard(cardNum);
+                     yourHand.takeCard(highCardGame.getCardFromDeck());
+                     System.out.println("You played a " + triedCard.toString());
+                     youPlayed = true;
                }
                else
                {
-                  continue;
+                     //Sorry, you can't play this card
+                     System.out.println("Sorry, you can't play this card");
+                     return;
                }
             }
-//            computerPlayedCard = computerHand.playCard(cardNum);
-//            computerHand.takeCard(highCardGame.getCardFromDeck());
+            else
+            {
+               myCardTable.youPassed();
+               System.out.println("You passed...");
+            }
 
-            //Update the playing area's card
-            Icon computerPlayedIcon = GameView.GUICard.getIcon(computerPlayedCard);
-            myCardTable.setComputerCard(computerPlayedIcon);
+            // Play a card from the computer's hand.
+            for (int i = 0; i < computerHand.getNumCards(); i++)
+            {
+               GameModel.Card toPlayCard = computerHand.inspectCard(i);
+               if(canPlayCard(myCardTable.playCard1,toPlayCard))
+               {
+                  toPlayCard = computerHand.playCard(i);
+                  myCardTable.setPlayCard1(toPlayCard);
+                  System.out.println("The computer played a " + toPlayCard.toString());
+                  computerHand.takeCard(highCardGame.getCardFromDeck());
+                  computerPlayed = true;
+                  break;
+               }
+               else if(canPlayCard(myCardTable.playCard2,toPlayCard))
+               {
+                  toPlayCard = computerHand.playCard(i);
+                  myCardTable.setPlayCard2(toPlayCard);
+                  System.out.println("The computer played a " + toPlayCard.toString());
+                  computerHand.takeCard(highCardGame.getCardFromDeck());
+                  computerPlayed = true;
+                  break;
+               }
+            }
+            if(!computerPlayed)
+            {
+               System.out.println("The computer can't play!");
+               myCardTable.computerPassed();
+            }
+
+            if(!youPlayed && !computerPlayed && (highCardGame.getNumCardsRemainingInDeck() > 0))
+            {
+               // deck puts a new card on each stack in the middle of the table
+               GameModel.Card card = highCardGame.getCardFromDeck();
+               System.out.println("The deck is playing " + card.toString());
+               int playedCardNum = randNum.nextInt(2);
+               if(playedCardNum==0)
+               {
+                  myCardTable.setPlayCard1(card);
+               }
+               else
+               {
+                  myCardTable.setPlayCard2(card);
+               }
+            }
 
             // Check how many cards are still in the deck.
             if (highCardGame.getNumCardsRemainingInDeck() == 0)
             {
-               if (youNoPlay < computerNoPlay)
+               int gameResults = myCardTable.gameResults();
+               if (gameResults == 1)
                {
                   myCardTable.setResult("You Win!");
                }
-               else if (youNoPlay > computerNoPlay)
+               else if (gameResults == -1)
                {
                   myCardTable.setResult("You Lose!");
                }
@@ -159,9 +190,20 @@ public class Assign6
                   myCardTable.setResult("It's a tie!");
                }
             }
+
+            //Update the playing area's card
+            myCardTable.clearYourHand();
+            numYourHand = yourHand.getNumCards();
+            for (int i = 0; i < numYourHand; i++)
+            {
+               Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
+               // Create a listener for each card in the hand
+               MyButtonActionListener listener = new MyButtonActionListener(i);
+               myCardTable.addCardToYourHand(icon,listener);
+            }
          }
       }
-
+      myCardTable.clearYourHand();
       //Load the initial player hand
       for (int i = 0; i < numYourHand; i++) 
       {
@@ -181,17 +223,8 @@ public class Assign6
       {
          back[i] = GameView.GUICard.getBackCardIcon();
       }
-      
+      myCardTable.setNoPlayListener(new MyButtonActionListener(-1));
       myCardTable.setComputerHand(back);
-
-      //
-      Icon yourCardIcon = GameView.GUICard.getIcon(playArea1);
-      myCardTable.setYourCard(yourCardIcon);
-
-      //
-      Icon computerPlayedIcon = GameView.GUICard.getIcon(playArea2);
-      myCardTable.setComputerCard(computerPlayedIcon);
-
       myCardTable.setVisible(true);
    }
 
@@ -831,6 +864,57 @@ class GameView extends JFrame implements ActionListener
    private static JLabel secTimer;
    GameController.Packer timerThread;
 
+   int youNoPlay = 0;
+   int computerNoPlay = 0;
+   void youPassed()
+   {
+      youNoPlay++;
+   }
+
+   void computerPassed()
+   {
+      computerNoPlay++;
+   }
+
+   // 0 means a tie, -1 means the computer won, 1 means you won
+   int gameResults()
+   {
+      if(youNoPlay==computerNoPlay)
+      {
+         return 0;
+      }
+      else if(youNoPlay > computerNoPlay)
+      {
+         return -1;
+      }
+      else 
+      {
+         return 1;
+      }
+   }
+
+   GameModel.Card playCard1;
+   GameModel.Card playCard2;
+   JButton noPlay;
+
+   public void setPlayCard1(GameModel.Card card)
+   {
+    playCard1 = card;
+    computerCardIcon.setIcon(GameView.GUICard.getIcon(card));
+    pnlPlayArea.repaint();
+   }
+
+   
+   public void setPlayCard2(GameModel.Card card)
+   {
+    yourCardIcon.setIcon(GameView.GUICard.getIcon(card));       
+    playCard2 = card;
+   }
+
+   void setNoPlayListener(ActionListener listener)
+  {
+    noPlay.addActionListener(listener);
+  }
    // GameView constructor
    GameView(String title, int numCardsPerHand, int numPlayers)
    {
@@ -870,7 +954,7 @@ class GameView extends JFrame implements ActionListener
       secTimer = new JLabel("", JLabel.CENTER);
       JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
       JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
-      JButton noPlay = new JButton("I Cannot Play");
+      noPlay = new JButton("I Cannot Play");
       JButton timerButton  = new JButton("Timer Start / Stop"); 
 
      
@@ -886,6 +970,9 @@ class GameView extends JFrame implements ActionListener
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
+
+      
+
       timerButton.addActionListener(new ActionListener()
       {
          int clickCount = 0;
@@ -1059,6 +1146,7 @@ class GameView extends JFrame implements ActionListener
       }
 
       static public Icon getIcon(GameModel.Card card) {
+         //System.out.println("Getting Icon for " + card.toString());
          return icon[valueAsInt(card)][suitAsInt(card)];
       }
 
@@ -1124,19 +1212,6 @@ class GameController
             numUnusedCardsPerPack, unusedCardsPerPack,
             Assign6.NUM_PLAYERS, Assign6.NUM_CARDS_PER_HAND);
       highCardGame.deal();
-      GameModel.Hand yourHand = highCardGame.getHand(0);
-      int numYourHand = yourHand.getNumCards();
-
-      //Load the initial player hand
-      for (int i = 0; i < numYourHand; i++)
-      {
-         Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
-         //Create an action listener for each card with the card id
-         //so when it's clicked, we know which one it was
-         MyButtonActionListener listener = new MyButtonActionListener(i);
-         myCardTable.addCardToYourHand(icon,listener);
-      }
-
    }
 
 
@@ -1367,76 +1442,5 @@ class GameController
          }
       }
    }
-   /*
-    * MyButtonActionListener keeps track of the card ID for the button
-    * it's associated with. That way, one listener implementation can
-    * handle all of the card buttons.
-    */
-   final class MyButtonActionListener implements ActionListener
-   {
-      public int cardNum;
 
-      public MyButtonActionListener(int id)
-      {
-         this.cardNum = id;
-      }
-
-      public void actionPerformed(ActionEvent e)
-      {
-         GameModel.Hand yourHand = highCardGame.getHand(0);
-         GameModel.Hand computerHand = highCardGame.getHand(1);
-         int numYourHand = yourHand.getNumCards();
-         int numComputerHand = computerHand.getNumCards();
-
-         //Check for an invalid card id
-         if(cardNum >= numYourHand)
-         {
-            return;
-         }
-         //Remove the played card from the human's hand.
-         GameModel.Card playedCard = yourHand.playCard(cardNum);
-         //Update the playing area's card
-         myCardTable.clearYourHand();
-         numYourHand = yourHand.getNumCards();
-         for (int i = 0; i < numYourHand; i++)
-         {
-            Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
-            // Create a listener for each card in the hand
-            MyButtonActionListener listener = new MyButtonActionListener(i);
-            myCardTable.addCardToYourHand(icon,listener);
-         }
-         Icon yourCardIcon = GameView.GUICard.getIcon(playedCard);
-         myCardTable.setYourCard(yourCardIcon);
-         double playerAmount = myCardTable.getCardAmount(playedCard);
-
-         int randCard = randNum.nextInt(numComputerHand);
-         GameModel.Card computerPlayedCard = computerHand.playCard(randCard);
-         //Subtract the card we just played.
-         numComputerHand -= 1;
-         double computerAmount =
-               myCardTable.getCardAmount(computerPlayedCard);
-         Icon computerPlayedIcon = GameView.GUICard.getIcon(computerPlayedCard);
-         myCardTable.setComputerCard(computerPlayedIcon);
-
-         //Reset the computer hand to the right number of cards
-         myCardTable.clearComputerHand();
-         for (int i = 0; i < numComputerHand; i++)
-         {
-            myCardTable.addCardToComputerHand(GameView.GUICard.getBackCardIcon());
-         }
-         //Evaluate the move
-         if (playerAmount > computerAmount)
-         {
-            myCardTable.setResult("You Win");
-//            yourWinnings.add(yourCardIcon);
-//            yourWinnings.add(computerPlayedIcon);
-         }
-         else
-         {
-            myCardTable.setResult("Computer Wins");
-//            computerWinnings.add(yourCardIcon);
-//            computerWinnings.add(computerPlayedIcon);
-         }
-      }
-   }
 }
