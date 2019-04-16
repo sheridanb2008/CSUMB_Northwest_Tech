@@ -28,17 +28,17 @@ class Assign6
       int numUnusedCardsPerPack = 0;
       GameModel.Card[] unusedCardsPerPack = null;
       GameController.CardGameFramework highCardGame;
-      GameView myCardTable;
+      GameView view;
       GameModel model = new GameModel();
       GameView.GUICard.loadCardIcons();
       // establish main frame in which program will run
-      myCardTable = new GameView("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
-      myCardTable.setSize(800, 800);
-      myCardTable.setLocationRelativeTo(null);
-      myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      view = new GameView("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
+      view.setSize(800, 800);
+      view.setLocationRelativeTo(null);
+      view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       // show everything to the user
-      myCardTable.setVisible(true);
+      view.setVisible(true);
       highCardGame = new GameController.CardGameFramework(numPacksPerDeck,
             numJokersPerPack, numUnusedCardsPerPack, unusedCardsPerPack,
             NUM_PLAYERS, NUM_CARDS_PER_HAND);
@@ -49,11 +49,11 @@ class Assign6
       // Deal two cards into the play area.
       GameModel.Card playCard = highCardGame.getCardFromDeck();
       model.setPlayCard1(playCard);
-      myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(playCard));
+      view.setPlayCard1Icon(GameView.GUICard.getIcon(playCard));
 
       playCard = highCardGame.getCardFromDeck();
       model.setPlayCard2(playCard);
-      myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(playCard));
+      view.setPlayCard2Icon(GameView.GUICard.getIcon(playCard));
 
       /**
        * MyButtonActionListener keeps track of the card ID for the button
@@ -100,7 +100,7 @@ class Assign6
                if(canPlayCard(model.getPlayCard1(),triedCard))
                {
                      model.setPlayCard1(triedCard);
-                     myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(triedCard));
+                     view.setPlayCard1Icon(GameView.GUICard.getIcon(triedCard));
 
                      yourHand.playCard(cardNum);
                      yourHand.takeCard(highCardGame.getCardFromDeck());
@@ -110,7 +110,7 @@ class Assign6
                else if(canPlayCard(model.getPlayCard2(),triedCard))
                {
                      model.setPlayCard2(triedCard);
-                     myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(triedCard));
+                     view.setPlayCard2Icon(GameView.GUICard.getIcon(triedCard));
                      yourHand.playCard(cardNum);
                      yourHand.takeCard(highCardGame.getCardFromDeck());
                      System.out.println("You played a " + triedCard.toString());
@@ -137,7 +137,7 @@ class Assign6
                {
                   toPlayCard = computerHand.playCard(i);
                   model.setPlayCard1(toPlayCard);
-                  myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(toPlayCard));
+                  view.setPlayCard1Icon(GameView.GUICard.getIcon(toPlayCard));
                   System.out.println("The computer played a " + toPlayCard.toString());
                   computerHand.takeCard(highCardGame.getCardFromDeck());
                   computerPlayed = true;
@@ -147,7 +147,7 @@ class Assign6
                {
                   toPlayCard = computerHand.playCard(i);
                   model.setPlayCard2(toPlayCard);
-                  myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(toPlayCard));
+                  view.setPlayCard2Icon(GameView.GUICard.getIcon(toPlayCard));
                   System.out.println("The computer played a " + toPlayCard.toString());
                   computerHand.takeCard(highCardGame.getCardFromDeck());
                   computerPlayed = true;
@@ -169,9 +169,9 @@ class Assign6
                System.out.println("The deck is playing a " + card1.toString() +
                      " and a " + card2.toString() + " to the stacks.");
                model.setPlayCard1(card1);
-               myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(card1));
+               view.setPlayCard1Icon(GameView.GUICard.getIcon(card1));
                model.setPlayCard2(card2);
-               myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(card2));
+               view.setPlayCard2Icon(GameView.GUICard.getIcon(card2));
             }
 
             // Check how many cards are still in the deck.
@@ -180,34 +180,34 @@ class Assign6
                int gameResults = model.gameResults();
                if (gameResults == 1)
                {
-                  myCardTable.setResult("You Win!");
+                  view.setResult("You Win!");
                }
                else if (gameResults == -1)
                {
-                  myCardTable.setResult("You Lose!");
+                  view.setResult("You Lose!");
                }
                else
                {
-                  myCardTable.setResult("It's a tie!");
+                  view.setResult("It's a tie!");
                }
-               myCardTable.clearYourHand();
+               view.clearYourHand();
                return;
             }
 
             //Update the playing area's card
-            myCardTable.clearYourHand();
+            view.clearYourHand();
             numYourHand = yourHand.getNumCards();
             for (int i = 0; i < numYourHand; i++)
             {
                Icon icon = GameView.GUICard.getIcon(yourHand.inspectCard(i));
                // Create a listener for each card in the hand
                MyButtonActionListener listener = new MyButtonActionListener(i);
-               myCardTable.addCardToYourHand(icon,listener);
+               view.addCardToYourHand(icon,listener);
             }
          }
       }
 
-      myCardTable.clearYourHand();
+      view.clearYourHand();
       //Load the initial player hand
       for (int i = 0; i < numYourHand; i++) 
       {
@@ -215,7 +215,7 @@ class Assign6
          //Create an action listener for each card with the card id
          //so when it's clicked, we know which one it was
          MyButtonActionListener listener = new MyButtonActionListener(i);
-         myCardTable.addCardToYourHand(icon,listener);
+         view.addCardToYourHand(icon,listener);
       }
 
       GameModel.Hand computerHand = highCardGame.getHand(1);
@@ -227,9 +227,9 @@ class Assign6
       {
          back[i] = GameView.GUICard.getBackCardIcon();
       }
-      myCardTable.setNoPlayListener(new MyButtonActionListener(-1));
-      myCardTable.setComputerHand(back);
-      myCardTable.setVisible(true);
+      view.setNoPlayListener(new MyButtonActionListener(-1));
+      view.setComputerHand(back);
+      view.setVisible(true);
    }
 
    public void actionPerformedTimer(ActionEvent e) {}
@@ -1256,7 +1256,7 @@ class GameController
    int numUnusedCardsPerPack = 0;
    GameModel.Card[] unusedCardsPerPack = null;
    CardGameFramework highCardGame;
-   GameView myCardTable;
+   GameView view;
    Random randNum = new Random();
 
    GameModel.Hand computerHand = highCardGame.getHand(1);
