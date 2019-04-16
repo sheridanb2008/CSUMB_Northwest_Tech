@@ -1009,7 +1009,8 @@ class GameView extends JFrame implements ActionListener
       computerCardIcon = new JLabel("", JLabel.CENTER);
       yourCardIcon = new JLabel("", JLabel.CENTER);
 
-      secTimer = new JLabel("", JLabel.CENTER);
+      secTimer = new JLabel("Timer: 0:00", JLabel.CENTER);
+      secTimer.setFont(new Font("TimesRoman",Font.BOLD,25));
       JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
       JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
       noPlay = new JButton("I Cannot Play");
@@ -1041,7 +1042,7 @@ class GameView extends JFrame implements ActionListener
             }
             else if (clickCount%2 == 0)
             {
-               timerThread.suspended();  
+               timerThread.doNothing();  
             }
             else if(clickCount%2 == 1 && clickCount > 2)
             {
@@ -1123,7 +1124,7 @@ class GameView extends JFrame implements ActionListener
    public static void setTimer(String time)
    {
       secTimer.setText(time);
-      Font bigger = new Font("TimesRoman",Font.BOLD,18);
+      Font bigger = new Font("TimesRoman",Font.BOLD,25);
       secTimer.setFont(bigger);
       pnlPlayArea.repaint();
    }
@@ -1450,17 +1451,31 @@ class GameController
    public static class Packer extends Thread
    {
       private int seconds = 0;
+      private int minutes = 0;
       public boolean suspended = false;
+            
       public void run()
+      
       {
               
          try
          {
             for(int i = 0; i < i + 1; i++)
             {
+               String count = String.format("%01d:%02d", minutes,seconds);
+               if (seconds >= 59)
+               { 
+                  minutes++;
+                  seconds = 0;
+               }
+               else 
+               {
                seconds += 1;
-               String count = seconds + " Seconds";
-               GameView.setTimer(count);
+               }
+               
+               String FinalTimer = "Timer: " + count;
+               
+               GameView.setTimer(FinalTimer);
                pause(1000);
                synchronized (this) 
                {
@@ -1473,7 +1488,7 @@ class GameController
             }
          }catch (InterruptedException e) {}
       }
-      public void suspended()
+      public void doNothing()
       {
          suspended = true;
       }
