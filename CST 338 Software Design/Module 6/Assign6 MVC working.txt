@@ -191,6 +191,7 @@ class Assign6
                   view.setResult("It's a tie!");
                }
                view.clearYourHand();
+               view.disableButtons();
                return;
             }
 
@@ -1068,6 +1069,7 @@ class GameView extends JFrame implements ActionListener
 
    public void disableButtons()
    {
+      noPlay.setEnabled(false);
    }
    public void clearYourHand()
    {
