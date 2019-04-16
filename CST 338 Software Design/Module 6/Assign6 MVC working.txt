@@ -20,12 +20,12 @@ class Assign6
 {
    static int NUM_CARDS_PER_HAND = 7;
    static int NUM_PLAYERS = 2;
-   static ArrayList<Icon> yourWinnings = new ArrayList<Icon>();
-   static ArrayList<Icon> computerWinnings = new ArrayList<Icon>();
-   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
-   static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
-   static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
+//   static ArrayList<Icon> yourWinnings = new ArrayList<Icon>();
+//   static ArrayList<Icon> computerWinnings = new ArrayList<Icon>();
+//   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+//   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+//   static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
+//   static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
 
    public static void main(String[] args)
    {
@@ -55,7 +55,6 @@ class Assign6
       // Deal two cards into the play area.
       myCardTable.setPlayCard1(highCardGame.getCardFromDeck());
       myCardTable.setPlayCard2(highCardGame.getCardFromDeck());
-
 
       /**
        * MyButtonActionListener keeps track of the card ID for the button
@@ -157,20 +156,16 @@ class Assign6
                myCardTable.computerPassed();
             }
 
-            if(!youPlayed && !computerPlayed && (highCardGame.getNumCardsRemainingInDeck() > 0))
+            // if both the player and computer can't play a card
+            if(!youPlayed && !computerPlayed && (highCardGame.getNumCardsRemainingInDeck() > 1))
             {
                // deck puts a new card on each stack in the middle of the table
-               GameModel.Card card = highCardGame.getCardFromDeck();
-               System.out.println("The deck is playing " + card.toString());
-               int playedCardNum = randNum.nextInt(2);
-               if(playedCardNum==0)
-               {
-                  myCardTable.setPlayCard1(card);
-               }
-               else
-               {
-                  myCardTable.setPlayCard2(card);
-               }
+               GameModel.Card card1 = highCardGame.getCardFromDeck();
+               GameModel.Card card2 = highCardGame.getCardFromDeck();
+               System.out.println("The deck is playing a " + card1.toString() +
+                     " and a " + card2.toString() + " to the stacks.");
+               myCardTable.setPlayCard1(card1);
+               myCardTable.setPlayCard2(card2);
             }
 
             // Check how many cards are still in the deck.
@@ -203,6 +198,7 @@ class Assign6
             }
          }
       }
+
       myCardTable.clearYourHand();
       //Load the initial player hand
       for (int i = 0; i < numYourHand; i++) 
@@ -957,7 +953,6 @@ class GameView extends JFrame implements ActionListener
       noPlay = new JButton("I Cannot Play");
       JButton timerButton  = new JButton("Timer Start / Stop"); 
 
-     
       pnlPlayArea.add(computerCardIcon);
       pnlPlayArea.add(secTimer);  
       pnlPlayArea.add(yourCardIcon);
@@ -970,8 +965,6 @@ class GameView extends JFrame implements ActionListener
       add(pnlComputerHand);
       add(pnlPlayArea);
       add(pnlHumanHand);
-
-      
 
       timerButton.addActionListener(new ActionListener()
       {
@@ -997,12 +990,7 @@ class GameView extends JFrame implements ActionListener
             }
          }
       });
-  
-
    }
-   
-   
-
 
    public void setComputerHand(Icon[] icons)
    {
@@ -1213,7 +1201,6 @@ class GameController
             Assign6.NUM_PLAYERS, Assign6.NUM_CARDS_PER_HAND);
       highCardGame.deal();
    }
-
 
    // ******************** class CardGameFramework *****************************
 
@@ -1427,8 +1414,7 @@ class GameController
          suspended = false;
          
       }
-      
-      
+
       public void pause(int milliseconds)
       {
          try
@@ -1442,5 +1428,4 @@ class GameController
          }
       }
    }
-
 }
