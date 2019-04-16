@@ -9,7 +9,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -20,12 +20,6 @@ class Assign6
 {
    static int NUM_CARDS_PER_HAND = 7;
    static int NUM_PLAYERS = 2;
-//   static ArrayList<Icon> yourWinnings = new ArrayList<Icon>();
-//   static ArrayList<Icon> computerWinnings = new ArrayList<Icon>();
-//   static JLabel[] computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-//   static JLabel[] humanLabels = new JLabel[NUM_CARDS_PER_HAND];
-//   static JLabel[] playedCardLabels = new JLabel[NUM_PLAYERS];
-//   static JLabel[] playLabelText = new JLabel[NUM_PLAYERS];
 
    public static void main(String[] args)
    {
@@ -35,7 +29,7 @@ class Assign6
       GameModel.Card[] unusedCardsPerPack = null;
       GameController.CardGameFramework highCardGame;
       GameView myCardTable;
-      Random randNum = new Random();
+      GameModel model = new GameModel();
       GameView.GUICard.loadCardIcons();
       // establish main frame in which program will run
       myCardTable = new GameView("CardTable", NUM_CARDS_PER_HAND, NUM_PLAYERS);
@@ -53,8 +47,13 @@ class Assign6
       int numYourHand = yourHand.getNumCards();
 
       // Deal two cards into the play area.
-      myCardTable.setPlayCard1(highCardGame.getCardFromDeck());
-      myCardTable.setPlayCard2(highCardGame.getCardFromDeck());
+      GameModel.Card playCard = highCardGame.getCardFromDeck();
+      model.setPlayCard1(playCard);
+      myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(playCard));
+
+      playCard = highCardGame.getCardFromDeck();
+      model.setPlayCard2(playCard);
+      myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(playCard));
 
       /**
        * MyButtonActionListener keeps track of the card ID for the button
@@ -75,7 +74,7 @@ class Assign6
             int cardRank = GameModel.Card.getCardRank(cardToPlay.getValue());
             if(Math.abs(stackRank - cardRank) == 1)
             {
-                return true;
+               return true;
             }
             return false;
          }
@@ -98,17 +97,20 @@ class Assign6
                // Play a card from the human's hand.
                GameModel.Card triedCard = yourHand.inspectCard(cardNum);
 
-               if(canPlayCard(myCardTable.playCard1,triedCard))
+               if(canPlayCard(model.getPlayCard1(),triedCard))
                {
-                     myCardTable.setPlayCard1(triedCard);
+                     model.setPlayCard1(triedCard);
+                     myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(triedCard));
+
                      yourHand.playCard(cardNum);
                      yourHand.takeCard(highCardGame.getCardFromDeck());
                      System.out.println("You played a " + triedCard.toString());
                      youPlayed = true;
                 }
-               else if(canPlayCard(myCardTable.playCard2,triedCard))
+               else if(canPlayCard(model.getPlayCard2(),triedCard))
                {
-                     myCardTable.setPlayCard2(triedCard);
+                     model.setPlayCard2(triedCard);
+                     myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(triedCard));
                      yourHand.playCard(cardNum);
                      yourHand.takeCard(highCardGame.getCardFromDeck());
                      System.out.println("You played a " + triedCard.toString());
@@ -123,7 +125,7 @@ class Assign6
             }
             else
             {
-               myCardTable.youPassed();
+               model.youPassed();
                System.out.println("You passed...");
             }
 
@@ -131,19 +133,21 @@ class Assign6
             for (int i = 0; i < computerHand.getNumCards(); i++)
             {
                GameModel.Card toPlayCard = computerHand.inspectCard(i);
-               if(canPlayCard(myCardTable.playCard1,toPlayCard))
+               if(canPlayCard(model.getPlayCard1(),toPlayCard))
                {
                   toPlayCard = computerHand.playCard(i);
-                  myCardTable.setPlayCard1(toPlayCard);
+                  model.setPlayCard1(toPlayCard);
+                  myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(toPlayCard));
                   System.out.println("The computer played a " + toPlayCard.toString());
                   computerHand.takeCard(highCardGame.getCardFromDeck());
                   computerPlayed = true;
                   break;
                }
-               else if(canPlayCard(myCardTable.playCard2,toPlayCard))
+               else if(canPlayCard(model.getPlayCard2(),toPlayCard))
                {
                   toPlayCard = computerHand.playCard(i);
-                  myCardTable.setPlayCard2(toPlayCard);
+                  model.setPlayCard2(toPlayCard);
+                  myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(toPlayCard));
                   System.out.println("The computer played a " + toPlayCard.toString());
                   computerHand.takeCard(highCardGame.getCardFromDeck());
                   computerPlayed = true;
@@ -153,7 +157,7 @@ class Assign6
             if(!computerPlayed)
             {
                System.out.println("The computer can't play!");
-               myCardTable.computerPassed();
+               model.computerPassed();
             }
 
             // if both the player and computer can't play a card
@@ -164,14 +168,16 @@ class Assign6
                GameModel.Card card2 = highCardGame.getCardFromDeck();
                System.out.println("The deck is playing a " + card1.toString() +
                      " and a " + card2.toString() + " to the stacks.");
-               myCardTable.setPlayCard1(card1);
-               myCardTable.setPlayCard2(card2);
+               model.setPlayCard1(card1);
+               myCardTable.setPlayCard1Icon(GameView.GUICard.getIcon(card1));
+               model.setPlayCard2(card2);
+               myCardTable.setPlayCard2Icon(GameView.GUICard.getIcon(card2));
             }
 
             // Check how many cards are still in the deck.
             if (highCardGame.getNumCardsRemainingInDeck() == 0)
             {
-               int gameResults = myCardTable.gameResults();
+               int gameResults = model.gameResults();
                if (gameResults == 1)
                {
                   myCardTable.setResult("You Win!");
@@ -184,6 +190,8 @@ class Assign6
                {
                   myCardTable.setResult("It's a tie!");
                }
+               myCardTable.clearYourHand();
+               return;
             }
 
             //Update the playing area's card
@@ -235,6 +243,37 @@ class Assign6
 class GameModel
 {
    // ******************** Card Class ******************************************
+   GameModel.Card playCard1;
+   GameModel.Card playCard2;
+
+   int youNoPlay = 0;
+   int computerNoPlay = 0;
+   void youPassed()
+   {
+      youNoPlay++;
+   }
+
+   void computerPassed()
+   {
+      computerNoPlay++;
+   }
+
+   // 0 means a tie, -1 means the computer won, 1 means you won
+   int gameResults()
+   {
+      if(youNoPlay==computerNoPlay)
+      {
+         return 0;
+      }
+      else if(youNoPlay > computerNoPlay)
+      {
+         return -1;
+      }
+      else 
+      {
+         return 1;
+      }
+   }
 
    static class Card
    {
@@ -832,6 +871,60 @@ class GameModel
          return cardCount;
       }
    }
+
+   /**
+    * @return the playCard1
+    */
+   public GameModel.Card getPlayCard1()
+   {
+      return playCard1;
+   }
+
+   /**
+    * @return the playCard2
+    */
+   public GameModel.Card getPlayCard2()
+   {
+      return playCard2;
+   }
+
+   public void setPlayCard1(GameModel.Card card)
+   {
+      playCard1 = card;
+   }
+
+   public void setPlayCard2(GameModel.Card card)
+   {
+      playCard2 = card;
+   }
+
+   /**
+    * @return the youNoPlay
+    */
+   public int getYouNoPlay() {
+      return youNoPlay;
+   }
+
+   /**
+    * @param youNoPlay the youNoPlay to set
+    */
+   public void setYouNoPlay(int youNoPlay) {
+      this.youNoPlay = youNoPlay;
+   }
+
+   /**
+    * @return the computerNoPlay
+    */
+   public int getComputerNoPlay() {
+      return computerNoPlay;
+   }
+
+   /**
+    * @param computerNoPlay the computerNoPlay to set
+    */
+   public void setComputerNoPlay(int computerNoPlay) {
+      this.computerNoPlay = computerNoPlay;
+   }
 }
 
 // -----------------------------------------------------------------------------
@@ -860,51 +953,20 @@ class GameView extends JFrame implements ActionListener
    private static JLabel secTimer;
    GameController.Packer timerThread;
 
-   int youNoPlay = 0;
-   int computerNoPlay = 0;
-   void youPassed()
-   {
-      youNoPlay++;
-   }
-
-   void computerPassed()
-   {
-      computerNoPlay++;
-   }
-
-   // 0 means a tie, -1 means the computer won, 1 means you won
-   int gameResults()
-   {
-      if(youNoPlay==computerNoPlay)
-      {
-         return 0;
-      }
-      else if(youNoPlay > computerNoPlay)
-      {
-         return -1;
-      }
-      else 
-      {
-         return 1;
-      }
-   }
+   JButton noPlay;
 
    GameModel.Card playCard1;
    GameModel.Card playCard2;
-   JButton noPlay;
-
-   public void setPlayCard1(GameModel.Card card)
+   public void setPlayCard1Icon(Icon icon)
    {
-    playCard1 = card;
-    computerCardIcon.setIcon(GameView.GUICard.getIcon(card));
-    pnlPlayArea.repaint();
+      computerCardIcon.setIcon(icon);
+      pnlPlayArea.repaint();
    }
 
-   
-   public void setPlayCard2(GameModel.Card card)
+   public void setPlayCard2Icon(Icon icon)
    {
-    yourCardIcon.setIcon(GameView.GUICard.getIcon(card));       
-    playCard2 = card;
+      yourCardIcon.setIcon(icon);
+      pnlPlayArea.repaint();
    }
 
    void setNoPlayListener(ActionListener listener)
@@ -970,7 +1032,6 @@ class GameView extends JFrame implements ActionListener
       {
          int clickCount = 0;
          GameController.Packer timerThread = new GameController.Packer();
-//         @SuppressWarnings("deprecation")
          public void actionPerformed(ActionEvent e)
          {     
             clickCount++;
@@ -980,13 +1041,11 @@ class GameView extends JFrame implements ActionListener
             }
             else if (clickCount%2 == 0)
             {
-             timerThread.suspended();  
-//               timerThread.suspend();
+               timerThread.suspended();  
             }
             else if(clickCount%2 == 1 && clickCount > 2)
             {
-            timerThread.resumeThread();
-//               timerThread.resume();
+               timerThread.resumeThread();
             }
          }
       });
@@ -1006,6 +1065,9 @@ class GameView extends JFrame implements ActionListener
       repaint();
    }
 
+   public void disableButtons()
+   {
+   }
    public void clearYourHand()
    {
       pnlHumanHand.removeAll();
@@ -1135,7 +1197,14 @@ class GameView extends JFrame implements ActionListener
 
       static public Icon getIcon(GameModel.Card card) {
          //System.out.println("Getting Icon for " + card.toString());
-         return icon[valueAsInt(card)][suitAsInt(card)];
+         int cardValue = valueAsInt(card);
+         int suitValue = suitAsInt(card);
+         if(cardValue >= icon.length || suitValue >= icon[cardValue].length)
+         {
+            System.out.println("Error getting Icon for " + card.toString());
+            System.out.println("Card Value: " + cardValue + " Suit Value: " + suitValue);
+         }
+         return icon[cardValue][suitValue];
       }
 
       static public int suitAsInt(GameModel.Card card) {
