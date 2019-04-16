@@ -1453,11 +1453,11 @@ class GameController
       private int seconds = 0;
       private int minutes = 0;
       public boolean suspended = false;
-            
+      // Start function for new thread      
       public void run()
       
       {
-              
+         //  Create timer     
          try
          {
             for(int i = 0; i < i + 1; i++)
@@ -1474,9 +1474,10 @@ class GameController
                }
                
                String FinalTimer = "Timer: " + count;
-               
+               // send timer to Game View for display
                GameView.setTimer(FinalTimer);
                pause(1000);
+               // pause timer and resume timer 
                synchronized (this) 
                {
                   while(suspended) {
@@ -1488,17 +1489,18 @@ class GameController
             }
          }catch (InterruptedException e) {}
       }
+      // pause the thread for the timer
       public void doNothing()
       {
          suspended = true;
       }
-      
+      // resume the thread for the timer
       public void resumeThread()
       {
          suspended = false;
          
       }
-
+      // Used to delay timer loop by a second
       public void pause(int milliseconds)
       {
          try
