@@ -1011,17 +1011,17 @@ class GameView extends JFrame implements ActionListener
 
       secTimer = new JLabel("Timer: 0:00", JLabel.CENTER);
       secTimer.setFont(new Font("TimesRoman",Font.BOLD,25));
-      JLabel yourCardLabel = new JLabel("You", JLabel.CENTER);
-      JLabel computerCardLabel = new JLabel("Computer", JLabel.CENTER);
+      JLabel yourCardLabel = new JLabel("Stack 2", JLabel.CENTER);
+      JLabel computerCardLabel = new JLabel("Stack 1", JLabel.CENTER);
       noPlay = new JButton("I Cannot Play");
       JButton timerButton  = new JButton("Timer Start / Stop"); 
 
-      pnlPlayArea.add(computerCardIcon);
       pnlPlayArea.add(secTimer);  
+      pnlPlayArea.add(computerCardIcon);
       pnlPlayArea.add(yourCardIcon);
       pnlPlayArea.add(results);
-      pnlPlayArea.add(computerCardLabel);
       pnlPlayArea.add(timerButton);
+      pnlPlayArea.add(computerCardLabel);
       pnlPlayArea.add(yourCardLabel);
       pnlPlayArea.add(noPlay);
 
