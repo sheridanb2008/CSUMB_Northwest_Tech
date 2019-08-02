@@ -3,6 +3,10 @@
    outline: none;
 }
 
+a {
+   color: #D2A517;
+}
+
 h4 {
    font-family: 'Ropa Sans', sans-serif;
    padding-left: 30px;
@@ -32,7 +36,7 @@ h4 {
    position: absolute;
    z-index: 1;
    width: 100%;
-   background-color: rgb(90, 131, 184);
+   background-color: #475DA1;
    height: 74px;
 }
 
@@ -324,6 +328,12 @@ input {
 }
 
 #account-btn {
+   font-family: 'Barlow Condensed', sans-serif;
    width: 336px;
    border-radius: 0px;
+}
+
+#lginText {
+   font-family: 'Barlow', sans-serif;
+   font-size: 15px;
 }
