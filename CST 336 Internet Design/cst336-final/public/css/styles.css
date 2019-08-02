@@ -163,6 +163,18 @@ input {
    color: #1F2A3C;
 }
 
+#createAccountBlock {
+   margin-top: 60px;
+   height: 1000px;
+   background-color: #fff;
+   padding-top: 180px;
+   padding-left: 100px;
+   padding-right: 100px;
+   margin-top:0px;
+   text-align: center;
+   color: #1F2A3C;
+}
+
 #optionTitle {
    font-family: 'Barlow Condensed', sans-serif;
    font-size: 20px;
@@ -260,4 +272,33 @@ input {
 
  #exampleFormControlTextarea1 {
     width: 400px;
+ }
+
+ .form-group {
+    text-align: left;
+    width: 500px;
+ }
+
+ .form-control {
+    margin-top: 0px;
+    width: 350px;
+ }
+
+ #formLabel {
+    font-size: 12px;
+ }
+
+ .form-control::-webkit-input-placeholder {
+   color: #999DA3;
+ }
+
+ #checkboxText {
+    padding-left: 25px;
+    padding-top: 3px;
+    font-size: 12px;
+    width: 350px;
+ }
+
+ .form-check-input {
+    margin-left: 0px;
  }
