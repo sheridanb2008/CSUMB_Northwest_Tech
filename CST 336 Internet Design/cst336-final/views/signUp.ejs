@@ -3,7 +3,8 @@
       <main>
          <div id="header"></div>
             <div id="createAccountBlock">
-               <h3>Let's create your account</h3>
+            <div id="createAccountContainer">
+               <h3 id="createAccountTitle">Let's create your account</h3>
                <form>
                   <div class="form-group">
                      <label id="formLabel" for="formGroupInput">First name</label>
@@ -24,12 +25,13 @@
                      <label class="form-check-label" for="defaultCheck1">
                        <p id="checkboxText">I want to receive communications about Northwestern Technologies news and offers.</p>
                      </label><br>
-                     <button type="submit" class="btn btn-primary">Submit</button>
+                     <button type="submit" class="btn btn-primary" id="account-btn">JOIN</button>
                      <br><br>
-                     <p id="checkboxText">Already have an account? <a href="/login">Log in</a></p>
+                     <p id="checkboxText">Already have an account? <a href="/login">Log in</a></p><br>
                   </div>
                   
                </form>
+               </div> <!-- end of createAccountContainer div-->
             </div>
             
          <div>
