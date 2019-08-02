@@ -1,0 +1,263 @@
+
+*:focus {
+   outline: none;
+}
+
+h4 {
+   font-family: 'Ropa Sans', sans-serif;
+   padding-left: 30px;
+   padding-top: 25px;
+   padding-bottom: 15px;
+   color: #fff;
+}
+
+.container {
+   position: relative;
+   max-width: 1440px;
+   padding: 0px;
+   z-index: 0;
+}
+
+#backPic {
+   position: absolute;
+   z-index: 1;
+}
+
+#backgroundPic {
+   max-width: 100%;
+   height: auto;
+}
+
+#header {
+   position: absolute;
+   z-index: 1;
+   width: 100%;
+   background-color: rgb(90, 131, 184);
+   height: 74px;
+}
+
+.row {
+   position: absolute;
+   width: 100%;
+   z-index: 2;
+}
+
+.btn-outline-primary {
+   margin-top: 18px;
+   margin-right: 6px;
+   color: #00306D;
+   border-color: #00306D
+}
+
+.btn-outline-primary:hover {
+   color: #fff;
+   background-color: #245BA1;
+   border-color: #245BA1
+}
+
+.btn-primary {
+   margin-top: 18px;
+   background-color: #00306D;
+   border-color: #00306D
+}
+
+.btn-primary:hover {
+   background-color: #245BA1;
+}
+
+#pageTitle {
+   font-family: 'Barlow Condensed', sans-serif;
+   font-size: 64px;
+   color: #fff;
+   position: absolute;
+   z-index: 3;
+   margin-left: 60px;
+   margin-top: 95px;
+}
+
+#pageText {
+   position: absolute;
+   z-index: 4;
+   margin-left: 60px;
+   margin-top: 180px;
+}
+
+#indexText {
+   font-family: 'Barlow', sans-serif;
+   font-size: 16px;
+   color: #fff;
+}
+
+.search {
+   position: absolute;
+   z-index: 5;
+   margin-left: 60px;
+}
+
+#search {
+   margin-top: 400px;
+}
+
+input {
+   margin-top: 350px;
+   font-size: 16px;
+   width: 400px;
+   padding: 11px;
+   border: 1px solid;
+   border-color: #DADADA;
+   margin-bottom: 15px;
+}
+
+#quoteBlock {
+   margin-top: 60px;
+   height: 310px;
+   background-color: #F9F8F7;
+   padding-top: 120px;
+   padding-left: 170px;
+   padding-right: 170px;
+   margin-top:0px;
+   text-align: center;
+   font-size: 18px;
+   font-style: italic;
+   line-height: 160%;
+   color: #1F2A3C;
+}
+
+#quoteText {
+   color: #222222;
+}
+
+#optionBlock {
+   margin-top: 60px;
+   height: 300px;
+   background-color: #fff;
+   padding-top: 60px;
+   padding-left: 100px;
+   padding-right: 100px;
+   margin-top:0px;
+   text-align: center;
+   color: #1F2A3C;
+}
+
+#loginBlock {
+   margin-top: 60px;
+   height: 700px;
+   background-color: #fff;
+   padding-top: 180px;
+   padding-left: 100px;
+   padding-right: 100px;
+   margin-top:0px;
+   text-align: center;
+   color: #1F2A3C;
+}
+
+#planeDataBlock {
+   margin-top: 60px;
+   height: 1800px;
+   background-color: #fff;
+   padding-top: 180px;
+   padding-left: 100px;
+   padding-right: 100px;
+   margin-top:0px;
+   text-align: center;
+   color: #1F2A3C;
+}
+
+#optionTitle {
+   font-family: 'Barlow Condensed', sans-serif;
+   font-size: 20px;
+   font-weight: bold;
+   text-align: left;
+   margin-bottom: 0px;
+}
+
+#optionText {
+   font-family: 'Barlow', sans-serif;
+   text-align: left;
+}
+
+#optionPic {
+   padding-top: 5px;
+   padding-right: 15px;
+}
+
+.optionContainer {
+   display: flex; 
+}
+
+.footer {
+   height: 340px;
+   background-color: #222222;
+}
+
+/* Login styles */
+
+.form-signin {
+   width: 100%;
+   max-width: 330px;
+   padding: 15px;
+   margin: auto;
+ }
+ .form-signin .checkbox {
+   font-weight: 400;
+ }
+ .form-signin .form-control {
+   position: relative;
+   box-sizing: border-box;
+   height: auto;
+   padding: 10px;
+   font-size: 16px;
+ }
+ .form-signin .form-control:focus {
+   z-index: 2;
+ }
+ .form-signin input[type="email"] {
+   margin-bottom: -1px;
+   border-bottom-right-radius: 0;
+   border-bottom-left-radius: 0;
+ }
+ .form-signin input[type="password"] {
+   margin-bottom: 10px;
+   border-top-left-radius: 0;
+   border-top-right-radius: 0;
+ }
+
+ #inputUsername, #inputPassword {
+    margin-top: 0px;
+ }
+
+ #dataEntryField {
+    margin-top: 0px;
+    margin-left: 0px;
+    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    border-radius: 5px;
+    color: #485057;
+ }
+
+ #dataEntryFieldSmall {
+   margin-top: 0px;
+   margin-left: 0px;
+   font-size: 16px;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   padding-left: 10px;
+   border-radius: 5px;
+   color: #485057;
+   width: 100px;
+}
+
+ #dataLabel {
+    text-align: right;
+ }
+
+ .containerPlaneData {
+    text-align: left;
+    width: 300px;
+ }
+
+ #exampleFormControlTextarea1 {
+    width: 400px;
+ }
