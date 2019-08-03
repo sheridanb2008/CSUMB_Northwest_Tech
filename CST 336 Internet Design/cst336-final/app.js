@@ -22,6 +22,10 @@ app.get("/login", function(req, res) {
    res.render("login.ejs");
 })
 
+app.get("/adminLogin", function(req, res) {
+   res.render("adminLogin.ejs");
+})
+
 app.get("/signUp", function(req, res) {
    res.render("signUp.ejs");
 })
