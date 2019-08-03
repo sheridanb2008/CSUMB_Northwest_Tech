@@ -50,24 +50,30 @@ h4 {
    margin-top: 18px;
    margin-right: 6px;
    color: #00306D;
-   border-color: #00306D
+   border-color: #00306D;
+   border-radius: 0px;
 }
 
 .btn-outline-primary:hover {
    color: #fff;
-   background-color: #245BA1;
-   border-color: #245BA1
+   background-color: #475DA1;
+   border-color: #475DA1
 }
 
 .btn-primary {
    margin-top: 18px;
    margin-right: 5px;
    background-color: #00306D;
-   border-color: #00306D
+   border-color: #00306D;
+   border-radius: 0px;
 }
 
 .btn-primary:hover {
-   background-color: #245BA1;
+   background-color: #475DA1;
+}
+
+#searchBtn {
+   margin-top: 0px;
 }
 
 #pageTitle {
